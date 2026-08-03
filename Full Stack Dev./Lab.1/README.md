@@ -1,7 +1,7 @@
 <i class="fa-regular fa-envelope"></i>
 # SUPERMAIL
 
-## Web Development Lab 
+## FSD Lab 
 
 ### Objective
 

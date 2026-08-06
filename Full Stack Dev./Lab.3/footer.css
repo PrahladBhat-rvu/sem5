@@ -1,0 +1,26 @@
+.footer{
+    background:#000;
+    display:flex;
+    justify-content:space-around;
+    padding:50px;
+}
+
+.footer-column{
+    display:flex;
+    flex-direction:column;
+}
+
+.footer-column h3{
+    color:white;
+    margin-bottom:15px;
+}
+
+.footer-column a{
+    color:#b3b3b3;
+    text-decoration:none;
+    margin:8px 0;
+}
+
+.footer-column a:hover{
+    color:#1DB954;
+}

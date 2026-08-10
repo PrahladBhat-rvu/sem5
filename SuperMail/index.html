@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MailBox</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+
+    <div class="logo">
+        <i class="fa-regular fa-envelope"></i>
+        <span>SuperMail</span>
+    </div>
+
+    <div class="search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search mail">
+    </div>
+
+    <div class="header-icons">
+        <i class="fa-solid fa-bell"></i>
+        <i class="fa-solid fa-gear"></i>
+        <img src="data:image/png;base64,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" alt="">
+    </div>
+
+</header>
+
+<div class="container">
+
+    <aside>
+
+        <button class="compose">
+            <i class="fa-solid fa-pen"></i>
+            Compose
+        </button>
+
+        <ul>
+
+            <li class="active">
+                <i class="fa-solid fa-inbox"></i>
+                Inbox
+                <span>12</span>
+            </li>
+
+            <li>
+                <i class="fa-solid fa-star"></i>
+                Starred
+            </li>
+
+            <li>
+                <i class="fa-solid fa-paper-plane"></i>
+                Sent
+            </li>
+
+            <li>
+                <i class="fa-solid fa-file"></i>
+                Drafts
+            </li>
+
+            <li>
+                <i class="fa-solid fa-trash"></i>
+                Trash
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <main>
+
+        <div class="mail unread">
+            <i class="fa-regular fa-star"></i>
+
+            <div class="sender">Google</div>
+
+            <div class="subject">
+                Welcome to SuperMail
+            </div>
+
+            <div class="time">
+                10:30 AM
+            </div>
+        </div>
+
+        <div class="mail">
+            <i class="fa-regular fa-star"></i>
+
+            <div class="sender">
+                Amazon
+            </div>
+
+            <div class="subject">
+                Your order has been shipped
+            </div>
+
+            <div class="time">
+                9:10 AM
+            </div>
+        </div>
+
+        <div class="mail unread">
+            <i class="fa-regular fa-star"></i>
+
+            <div class="sender">
+                Rahul
+            </div>
+
+            <div class="subject">
+                Project meeting tomorrow
+            </div>
+
+            <div class="time">
+                Yesterday
+            </div>
+        </div>
+
+        <div class="mail">
+            <i class="fa-regular fa-star"></i>
+
+            <div class="sender">
+                Netflix
+            </div>
+
+            <div class="subject">
+                New movies added
+            </div>
+
+            <div class="time">
+                Jul 30
+            </div>
+        </div>
+
+        <div class="mail">
+            <i class="fa-regular fa-star"></i>
+
+            <div class="sender">
+                GitHub
+            </div>
+
+            <div class="subject">
+                Security alert on your repository
+            </div>
+
+            <div class="time">
+                Jul 29
+            </div>
+        </div>
+
+        <div class="mail unread">
+            <i class="fa-regular fa-star"></i>
+
+            <div class="sender">
+                RVCE
+            </div>
+
+            <div class="subject">
+                Lab submission deadline
+            </div>
+
+            <div class="time">
+                Jul 28
+            </div>
+        </div>
+
+    </main>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

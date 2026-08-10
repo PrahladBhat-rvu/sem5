@@ -1,0 +1,124 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #eef2f7;
+  color: #010206;
+  font-family: Arial, sans-serif;
+  padding: 32px 16px;
+}
+
+.resume {
+  width: min(1460px, 100%);
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 12px 35px rgba(32, 33, 36, 0.12);
+  padding: 36px;
+}
+
+.resume-header {
+  border-bottom: 2px solid #1e88e5;
+  padding-bottom: 18px;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  color: #010a11;
+  font-size: 36px;
+  margin-bottom: 6px;
+}
+
+.role {
+  color: #3c4043;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.contact {
+  color: #5f6368;
+  font-size: 14px;
+  margin-bottom: 0;
+}
+
+section {
+  margin-top: 24px;
+}
+
+h2 {
+  color: #1f2937;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+h3 {
+  color: #374151;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+p {
+  line-height: 1.6;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.skills li {
+  background: #e8f0fe;
+  color: #174ea6;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-weight: 700;
+}
+
+article {
+  border-left: 3px solid #d2e3fc;
+  padding-left: 14px;
+  margin-top: 14px;
+}
+
+button {
+  margin-top: 24px;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 6px;
+  background: #6d6e6f;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+button:hover {
+  background: #5d5d5e;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 16px;
+  }
+
+  .resume {
+    padding: 24px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+}

@@ -1,0 +1,375 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+.app {
+  width: 100vw;
+  height: 100vh;
+  background: #d1d1d1;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+
+/* =========================================
+   LEFT DARK SECTION
+========================================= */
+
+.card-section {
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  width: 33%;
+  height: 100%;
+
+  background: linear-gradient(
+    135deg,
+    #18002d 0%,
+    #281044 50%,
+    #150021 100%
+  );
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.form {
+  position: absolute;
+
+  left: 33%;
+  top: 0;
+
+  width: 67%;
+  height: 100%;
+
+  padding-left: 175px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  background: #d1d1d1;
+}
+
+
+/* =========================================
+   FRONT CARD
+========================================= */
+
+.card {
+  position: absolute;
+
+  width: 350px;
+  height: 200px;
+
+  left: 160px;
+  top: 120px;
+
+  padding: 22px;
+
+  border-radius: 9px;
+
+  color: white;
+
+  background: linear-gradient(
+    120deg,
+    #4c19bd 0%,
+    #6138e7 35%,
+    #4388dc 70%,
+    #bd5558 100%
+  );
+
+  box-shadow:
+    0 18px 35px rgba(0, 0, 0, 0.25);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  z-index: 10;
+}
+
+
+/* =========================================
+   CARD TOP
+========================================= */
+
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.chip {
+  width: 25px;
+  height: 25px;
+
+  background: #dedede;
+
+  border-radius: 50%;
+}
+
+.contactless {
+  font-size: 21px;
+  color: #dedede;
+}
+
+
+/* =========================================
+   CARD NUMBER
+========================================= */
+
+.card-number {
+  font-size: 18px;
+
+  letter-spacing: 3px;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   CARD BOTTOM
+========================================= */
+
+.card-bottom {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-bottom span {
+  display: block;
+
+  font-size: 6px;
+
+  letter-spacing: 0.9px;
+
+  opacity: 0.85;
+}
+
+.card-bottom p {
+  margin: 4px 0 0;
+
+  font-size: 10px;
+
+  letter-spacing: 0.7px;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   SECOND CARD
+========================================= */
+
+.card-section::after {
+  content: "";
+
+  position: absolute;
+
+  width: 350px;
+  height: 200px;
+
+  left: 210px;
+  top: 250px;
+
+  background: linear-gradient(
+    180deg,
+    #eeeeee 0%,
+    #cccccc 100%
+  );
+
+  border-radius: 9px;
+
+  box-shadow:
+    0 18px 35px rgba(0, 0, 0, 0.22);
+
+  z-index: 4;
+}
+
+
+/* =========================================
+   SECOND CARD BLACK STRIPE
+========================================= */
+
+.card-section::before {
+  content: "";
+
+  position: absolute;
+
+  width: 350px;
+  height: 42px;
+
+  left: 210px;
+  top: 270px;
+
+  background: #202020;
+
+  z-index: 5;
+}
+
+
+/* =========================================
+   FORM GROUP
+========================================= */
+
+.input-group {
+  width: 300px;
+
+  margin-bottom: 20px;
+}
+
+
+/* =========================================
+   LABEL
+========================================= */
+
+label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 10px;
+
+  font-weight: bold;
+
+  letter-spacing: 0.8px;
+
+  color: #171717;
+}
+
+
+/* =========================================
+   INPUT
+========================================= */
+
+input {
+  width: 300px;
+  height: 40px;
+
+  padding: 0 11px;
+
+  border: 1px solid #c4c4c4;
+
+  border-radius: 5px;
+
+  background: #d1d1d1;
+
+  outline: none;
+
+  font-size: 12px;
+
+  color: #222;
+}
+
+input::placeholder {
+  color: #999;
+}
+
+input:focus {
+  border-color: #6535d8;
+}
+
+
+/* =========================================
+   EXPIRY + CVC
+========================================= */
+
+.row {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 14px;
+
+  margin-bottom: 0;
+}
+
+.row .input-group {
+  width: auto;
+}
+
+.expiry {
+  display: flex;
+  gap: 7px;
+}
+
+.expiry input {
+  width: 55px;
+}
+
+.row .input-group:last-child input {
+  width: 90px;
+}
+
+
+/* =========================================
+   CONFIRM BUTTON
+========================================= */
+
+button {
+  width: 300px;
+  height: 40px;
+
+  margin-top: 0;
+
+  border: none;
+
+  border-radius: 5px;
+
+  background: #26002f;
+
+  color: white;
+
+  font-size: 12px;
+
+  cursor: pointer;
+}
+
+button:hover {
+  background: #390047;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1100px) {
+
+  .card {
+    left: 100px;
+  }
+
+  .card-section::after {
+    left: 140px;
+  }
+
+  .card-section::before {
+    left: 140px;
+  }
+
+  .form {
+    padding-left: 130px;
+  }
+}

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="page">
+
+        <!-- Header -->
+        <header class="header">
+
+            <div class="header-logo">
+                Task List
+            </div>
+
+            <nav class="navigation">
+                <button id="taskListButton">Task List</button>
+                <button id="learnedButton"></button>
+            </nav>
+
+        </header>
+
+
+        <!-- Task List Page -->
+        <main id="taskPage" class="task-container">
+
+            <h1>Task List</h1>
+
+            <div class="task-input">
+
+                <input
+                    type="text"
+                    id="taskInput"
+                    placeholder="Add a task"
+                >
+
+                <button id="addButton">
+                    Add
+                </button>
+
+            </div>
+
+            <p id="errorMessage" class="error-message"></p>
+
+            <div id="taskList" class="task-list">
+                <!-- Tasks will appear here -->
+            </div>
+
+        </main>
+
+
+        <!-- What I Learnt Page -->
+        <main id="learningPage" class="learning-container hidden">
+
+            <h1>What I Learnt</h1>
+
+            <p class="intro">
+                Key things I learned from the IBM Web Development Fundamentals course.
+            </p>
+
+
+            <section class="learning-section">
+
+                <h2>1. Web Development Basics</h2>
+
+                <ul>
+                    <li>Learned what web development is and how websites work.</li>
+                    <li>Learned the difference between frontend and backend development.</li>
+                    <li>Learned about web browsers, servers, and websites.</li>
+                    <li>Learned the basic technologies used to build websites.</li>
+                    <li>Learned how HTML, CSS, and JavaScript work together.</li>
+                </ul>
+
+            </section>
+
+
+            <section class="learning-section">
+
+                <h2>2. Developing Sites for the Web</h2>
+
+                <ul>
+                    <li>Learned how websites are planned before development.</li>
+                    <li>Learned how wireframes help plan a webpage layout.</li>
+                    <li>Learned about different types of websites.</li>
+                    <li>Learned about responsive web design.</li>
+                    <li>Learned why websites should work on different screen sizes.</li>
+                </ul>
+
+            </section>
+
+
+            <section class="learning-section">
+
+                <h2>3. Introduction to HTML and CSS</h2>
+
+                <ul>
+                    <li>Learned how HTML provides structure to a webpage.</li>
+                    <li>Learned how to use HTML elements and attributes.</li>
+                    <li>Learned how CSS is used to style webpages.</li>
+                    <li>Learned about colors, fonts, spacing, borders, and layouts.</li>
+                    <li>Learned how CSS media queries help with responsive design.</li>
+                </ul>
+
+            </section>
+
+
+            <section class="learning-section">
+
+                <h2>4. Bringing Websites to Life with JavaScript</h2>
+
+                <ul>
+                    <li>Learned how JavaScript adds interactivity to webpages.</li>
+                    <li>Learned about variables and different types of values.</li>
+                    <li>Learned how functions are used to perform actions.</li>
+                    <li>Learned about conditions and comparison operators.</li>
+                    <li>Learned how JavaScript can respond to user actions.</li>
+                    <li>Learned how JavaScript can change webpage content.</li>
+                </ul>
+
+            </section>
+
+
+            <section class="learning-section">
+
+                <h2>5. Website Testing and Deployment</h2>
+
+                <ul>
+                    <li>Learned why websites need to be tested before release.</li>
+                    <li>Learned how to check websites for errors.</li>
+                    <li>Learned about testing websites on different devices.</li>
+                    <li>Learned why websites should work correctly on different browsers.</li>
+                    <li>Learned the basic idea of deploying a website online.</li>
+                </ul>
+
+            </section>
+
+
+            <section class="learning-section">
+
+                <h2>6. Develop an Interactive Task List Web Page</h2>
+
+                <ul>
+                    <li>Learned how to create an interactive task list.</li>
+                    <li>Learned how users can enter and add tasks.</li>
+                    <li>Learned how to use the Enter key for adding tasks.</li>
+                    <li>Learned how users can mark tasks as complete.</li>
+                    <li>Learned how completed tasks can have visual confirmation.</li>
+                    <li>Learned how to display an error when no task is entered.</li>
+                    <li>Learned how to remove tasks from a list.</li>
+                    <li>Learned how to make a webpage work on desktop and mobile.</li>
+                </ul>
+
+            </section>
+
+
+            <section class="learning-section">
+
+                <h2>7. Your Future in Web Development</h2>
+
+                <ul>
+                    <li>Learned about different career options in web development.</li>
+                    <li>Learned about the skills needed for web development jobs.</li>
+                    <li>Learned why practical projects are important for a portfolio.</li>
+                    <li>Learned the importance of improving technical skills.</li>
+                    <li>Learned how web development skills can be used in different industries.</li>
+                </ul>
+
+            </section>
+
+
+            <button id="backButton" class="back-button">
+                Back to Task List
+            </button>
+
+        </main>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

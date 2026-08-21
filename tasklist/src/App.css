@@ -1,0 +1,284 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #2864e8;
+}
+
+.page {
+  min-height: 100vh;
+}
+
+/* Header */
+
+.header {
+  height: 70px;
+  padding: 0 40px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-logo {
+  color: #2864e8;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.header nav {
+  display: flex;
+  gap: 20px;
+}
+
+.header nav button {
+  padding: 10px 16px;
+  background-color: transparent;
+  color: #2864e8;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.header nav button:hover {
+  text-decoration: underline;
+}
+
+/* Task container */
+
+.task-container {
+  width: 100%;
+  max-width: 700px;
+  margin: 80px auto;
+  background-color: white;
+  padding: 50px;
+}
+
+.task-container h1 {
+  margin: 0 0 30px;
+  color: #2864e8;
+  font-size: 32px;
+}
+
+/* Input */
+
+.task-input {
+  display: flex;
+  gap: 20px;
+}
+
+.task-input input[type="text"] {
+  flex: 1;
+  padding: 14px;
+  font-size: 16px;
+  border: 2px solid #4da3ff;
+  border-radius: 5px;
+  outline: none;
+}
+
+.task-input input[type="text"]:focus {
+  border-color: #2864e8;
+}
+
+/* Add button */
+
+.task-input button {
+  padding: 14px 30px;
+  font-size: 16px;
+  color: white;
+  background-color: #2864e8;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.task-input button:hover {
+  background-color: #1f52c5;
+}
+
+/* Error */
+
+.error-message {
+  margin: 10px 0 0;
+  color: #d32f2f;
+  font-size: 14px;
+}
+
+/* Task list */
+
+.task-list {
+  margin-top: 30px;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 5px;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+}
+
+.task-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.task-item span {
+  color: #333333;
+}
+
+/* Completed task */
+
+.task-item.completed span {
+  text-decoration: line-through;
+  color: #888888;
+}
+
+/* Remove button */
+
+.remove-button {
+  margin-left: auto;
+  padding: 8px 12px;
+  background-color: transparent;
+  color: #d32f2f;
+  border: 1px solid #d32f2f;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.remove-button:hover {
+  background-color: #d32f2f;
+  color: white;
+}
+
+/* What I Learnt */
+
+.learning-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 50px auto;
+  background-color: white;
+  padding: 50px;
+}
+
+.learning-container h1 {
+  margin: 0 0 10px;
+  color: #2864e8;
+  font-size: 36px;
+}
+
+.intro {
+  margin-bottom: 40px;
+  color: #555555;
+  font-size: 17px;
+}
+
+.learning-section {
+  margin-bottom: 35px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #dddddd;
+}
+
+.learning-section:last-of-type {
+  border-bottom: none;
+}
+
+.learning-section h2 {
+  margin: 0 0 15px;
+  color: #2864e8;
+  font-size: 23px;
+}
+
+.learning-section ul {
+  margin: 0;
+  padding-left: 25px;
+  color: #333333;
+}
+
+.learning-section li {
+  margin-bottom: 9px;
+  line-height: 1.5;
+}
+
+/* Back button */
+
+.back-button {
+  margin-top: 10px;
+  padding: 13px 22px;
+  background-color: #2864e8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background-color: #1f52c5;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .header {
+    height: auto;
+    min-height: 70px;
+    padding: 15px 20px;
+    gap: 15px;
+  }
+
+  .header-logo {
+    font-size: 18px;
+  }
+
+  .header nav {
+    gap: 5px;
+  }
+
+  .header nav button {
+    padding: 8px;
+    font-size: 13px;
+  }
+
+  .task-container {
+    margin: 30px 15px;
+    padding: 30px 20px;
+  }
+
+  .task-input {
+    flex-direction: column;
+  }
+
+  .task-input button {
+    width: 100%;
+  }
+
+  .task-item {
+    flex-wrap: wrap;
+  }
+
+  .remove-button {
+    margin-left: 30px;
+  }
+
+  .learning-container {
+    margin: 30px 15px;
+    padding: 30px 20px;
+  }
+
+  .learning-container h1 {
+    font-size: 30px;
+  }
+
+  .learning-section h2 {
+    font-size: 20px;
+  }
+}

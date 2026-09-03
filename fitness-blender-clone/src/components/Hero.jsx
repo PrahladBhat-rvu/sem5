@@ -1,25 +1,26 @@
 import heroTrainers from "../assets/hero/hero-trainers.png";
+import { useLanguage } from "../context/LanguageContext";
 
 function Hero() {
+  const { t } = useLanguage();
+
   return (
     <section className="hero">
 
       <div className="hero-content">
 
         <h1>
-          Feel Great.
+          {t.hero.titleLine1}
           <br />
-          Body and Mind.
+          {t.hero.titleLine2}
         </h1>
 
         <p>
-          Choose from hundreds of workouts, healthy recipes, relaxing
-          meditations, and expert articles, for a whole body and mind
-          approach to feeling great.
+          {t.hero.description}
         </p>
 
         <button>
-          Join Now
+          {t.hero.button}
         </button>
 
       </div>

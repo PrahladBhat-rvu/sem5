@@ -1,5 +1,6 @@
 function FeatureCard({
   title,
+  titleLine2,
   description,
   buttonText,
   className = "",
@@ -9,9 +10,20 @@ function FeatureCard({
 
       <div className="feature-content">
 
-        <h2>{title}</h2>
+        <h2>
+          {title}
 
-        <p>{description}</p>
+          {titleLine2 && (
+            <>
+              <br />
+              {titleLine2}
+            </>
+          )}
+        </h2>
+
+        <p>
+          {description}
+        </p>
 
         <button>
           {buttonText}

@@ -1,88 +1,141 @@
+import { useState } from "react";
+import { useLanguage } from "../context/LanguageContext";
+
 function Navbar() {
+  const { language, changeLanguage, t } = useLanguage();
+
+  const [languageOpen, setLanguageOpen] = useState(false);
+
+  const languages = [
+    {
+      code: "en",
+      label: "English",
+    },
+    {
+      code: "es",
+      label: "Español",
+    },
+    {
+      code: "de",
+      label: "Deutsch",
+    },
+  ];
+
   return (
-    <>
-      <div className="announcement-bar">
-        <span>
-          🔥 Ready for Week 47? Take a peek at the lineup and get ready to hit play!
+    <header className="navbar">
+
+      {/* Logo */}
+      <a href="/" className="navbar-logo">
+
+        <div className="logo-symbol">
+          <span></span>
+        </div>
+
+        <div className="logo-text">
+          <strong>fitness</strong>
+          <span>BLENDER</span>
+        </div>
+
+      </a>
+
+
+      {/* Navigation */}
+      <nav className="navbar-links">
+
+        <span className="nav-item">
+          {t.nav.workouts}
+          <i className="chevron"></i>
         </span>
 
-        <span className="announcement-close">×</span>
+        <span className="nav-item">
+          {t.nav.programs}
+          <i className="chevron"></i>
+        </span>
+
+        <span className="nav-item">
+          {t.nav.healthyLiving}
+          <i className="chevron"></i>
+        </span>
+
+        <span className="nav-item">
+          {t.nav.community}
+          <i className="chevron"></i>
+        </span>
+
+        <span className="nav-item">
+          {t.nav.about}
+          <i className="chevron"></i>
+        </span>
+
+        <span className="nav-item">
+          {t.nav.store}
+        </span>
+
+        <span className="nav-item membership">
+          {t.nav.membership}
+        </span>
+
+      </nav>
+
+
+      {/* Right side */}
+      <div className="navbar-actions">
+
+        <div className="account-info">
+          <small>{t.nav.signIn}</small>
+
+          <strong>
+            {t.nav.myFitness}
+            <i className="chevron"></i>
+          </strong>
+        </div>
+
+
+        {/* Language selector */}
+        <div className="language-selector">
+
+          <button
+            className="language-button"
+            onClick={() => setLanguageOpen(!languageOpen)}
+          >
+            {language.toUpperCase()}
+            <i className="chevron"></i>
+          </button>
+
+
+          {languageOpen && (
+            <div className="language-menu">
+
+              {languages.map((item) => (
+                <button
+                  key={item.code}
+                  className={
+                    language === item.code
+                      ? "language-option active"
+                      : "language-option"
+                  }
+                  onClick={() => {
+                    changeLanguage(item.code);
+                    setLanguageOpen(false);
+                  }}
+                >
+                  {item.label}
+                </button>
+              ))}
+
+            </div>
+          )}
+
+        </div>
+
+
+        <span className="search-icon"></span>
+
+        <span className="bag-icon"></span>
+
       </div>
 
-      <header className="navbar">
-
-        {/* LOGO */}
-        <div className="navbar-logo">
-          <div className="logo-symbol">
-            <span></span>
-          </div>
-
-          <div className="logo-text">
-            <strong>fitness</strong>
-            <span>BLENDER</span>
-          </div>
-        </div>
-
-
-        {/* NAVIGATION */}
-        <nav className="navbar-links">
-
-          <span className="nav-item">
-            WORKOUTS
-            <i className="chevron"></i>
-          </span>
-
-          <span className="nav-item">
-            PROGRAMS
-            <i className="chevron"></i>
-          </span>
-
-          <span className="nav-item">
-            HEALTHY LIVING
-            <i className="chevron"></i>
-          </span>
-
-          <span className="nav-item">
-            COMMUNITY
-            <i className="chevron"></i>
-          </span>
-
-          <span className="nav-item">
-            ABOUT
-            <i className="chevron"></i>
-          </span>
-
-          <span className="nav-item">
-            STORE
-          </span>
-
-          <span className="nav-item membership">
-            MEMBERSHIP
-          </span>
-
-        </nav>
-
-
-        {/* RIGHT SIDE */}
-        <div className="navbar-actions">
-
-          <div className="account-info">
-            <small>Hi! Sign In</small>
-
-            <strong>
-              MY FITNESS
-              <i className="chevron"></i>
-            </strong>
-          </div>
-
-          <span className="search-icon"></span>
-
-          <span className="bag-icon"></span>
-
-        </div>
-
-      </header>
-    </>
+    </header>
   );
 }
 

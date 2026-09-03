@@ -5,78 +5,78 @@ import Hero from "./components/Hero";
 import FeatureCard from "./components/FeatureCard";
 import Footer from "./components/Footer";
 
+import { useLanguage } from "./context/LanguageContext";
+
 function App() {
+  const { t } = useLanguage();
+
   return (
     <div className="app">
+
       <Navbar />
 
       <Hero />
 
       <main>
+
         <section className="feature-grid">
+
           <FeatureCard
             className="trainer-series"
-            title="Trainer Series"
-            description="Exercise with your favorite trainer in our new Trainer Series programs."
-            buttonText="View Series"
+            title={t.cards.trainer.title}
+            description={t.cards.trainer.description}
+            buttonText={t.cards.trainer.button}
           />
+
 
           <FeatureCard
             className="free-membership"
-            title={
-              <>
-                Earn a Free Plus
-                <br />
-                Membership
-              </>
-            }
-            description="Share your referral code and every sign up earns rewards to put toward your membership."
-            buttonText="Learn About Rewards"
+            title={t.cards.membership.titleLine1}
+            titleLine2={t.cards.membership.titleLine2}
+            description={t.cards.membership.description}
+            buttonText={t.cards.membership.button}
           />
+
 
           <FeatureCard
             className="powerblock"
-            title={
-              <>
-                Small Footprint
-                <br />
-                Big Gains
-              </>
-            }
-            description="The perfect dumbbells for any space. Use discount code FBXPB20 for $20 off an order of $200 or more."
-            buttonText="Shop PowerBlock"
+            title={t.cards.powerblock.titleLine1}
+            titleLine2={t.cards.powerblock.titleLine2}
+            description={t.cards.powerblock.description}
+            buttonText={t.cards.powerblock.button}
           />
+
 
           <FeatureCard
             className="specialty"
-            title="Specialty Content"
-            description="Pilot programs provide special content tailored to smaller audiences, conditions, or life events."
-            buttonText="Browse Pilot Programs"
+            title={t.cards.specialty.title}
+            description={t.cards.specialty.description}
+            buttonText={t.cards.specialty.button}
           />
+
 
           <FeatureCard
             className="workout-videos"
-            title="Workout Videos"
-            description="Exercise with certified personal trainers whether you're at home or on the road."
-            buttonText="Find a Workout"
+            title={t.cards.videos.title}
+            description={t.cards.videos.description}
+            buttonText={t.cards.videos.button}
           />
+
 
           <FeatureCard
             className="community"
-            title={
-              <>
-                Supportive
-                <br />
-                Community
-              </>
-            }
-            description="Stay motivated and engaged with a little help from a supportive community of other members."
-            buttonText="Visit Community"
+            title={t.cards.community.titleLine1}
+            titleLine2={t.cards.community.titleLine2}
+            description={t.cards.community.description}
+            buttonText={t.cards.community.button}
           />
+
         </section>
+
       </main>
 
       <Footer />
+
     </div>
   );
 }

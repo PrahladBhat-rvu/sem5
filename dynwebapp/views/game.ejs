@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title><%= game.title %></title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 25px;
+            color: #aaa;
+            text-decoration: none;
+        }
+
+        .back:hover {
+            color: white;
+        }
+
+        .game {
+            display: flex;
+            gap: 40px;
+            background: #1d1d1d;
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        .poster {
+            width: 280px;
+            height: 420px;
+            object-fit: cover;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        .details {
+            flex: 1;
+        }
+
+        h1 {
+            font-size: 38px;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            color: #bbb;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .detail {
+            margin: 12px 0;
+        }
+
+        .label {
+            color: #777;
+            margin-right: 5px;
+        }
+
+        .platforms {
+            margin-top: 25px;
+        }
+
+        .platform {
+            display: inline-block;
+            background: #333;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin: 5px 5px 0 0;
+        }
+
+        .modes {
+            margin-top: 25px;
+        }
+
+        .mode {
+            display: inline-block;
+            background: #333;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin: 5px 5px 0 0;
+        }
+
+        .other-games {
+            margin-top: 40px;
+        }
+
+        .other-game {
+            display: inline-block;
+            background: #1d1d1d;
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            margin: 5px;
+            border-radius: 8px;
+        }
+
+        .other-game:hover {
+            background: #292929;
+        }
+
+        @media (max-width: 700px) {
+
+            .game {
+                flex-direction: column;
+            }
+
+            .poster {
+                width: 100%;
+                height: auto;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <a href="/" class="back">
+        ← Back to Game Library
+    </a>
+
+
+    <div class="game">
+
+        <img
+            class="poster"
+            src="<%= game.poster %>"
+            alt="<%= game.title %>"
+        >
+
+
+        <div class="details">
+
+            <h1>
+                <%= game.title %>
+            </h1>
+
+
+            <p class="description">
+                <%= game.description %>
+            </p>
+
+
+            <div class="detail">
+
+                <span class="label">
+                    Genre:
+                </span>
+
+                <%= game.genre %>
+
+            </div>
+
+
+            <div class="detail">
+
+                <span class="label">
+                    Developer:
+                </span>
+
+                <%= game.developer %>
+
+            </div>
+
+
+            <div class="detail">
+
+                <span class="label">
+                    Publisher:
+                </span>
+
+                <%= game.publisher %>
+
+            </div>
+
+
+            <div class="detail">
+
+                <span class="label">
+                    Release Year:
+                </span>
+
+                <%= game.releaseYear %>
+
+            </div>
+
+
+            <div class="detail">
+
+                <span class="label">
+                    Rating:
+                </span>
+
+                <%= game.rating %>/10
+
+            </div>
+
+
+            <div class="platforms">
+
+                <h3>Platforms</h3>
+
+                <% game.platforms.forEach(platform => { %>
+
+                    <span class="platform">
+                        <%= platform %>
+                    </span>
+
+                <% }) %>
+
+            </div>
+
+
+            <div class="modes">
+
+                <h3>Game Modes</h3>
+
+                <% game.modes.forEach(mode => { %>
+
+                    <span class="mode">
+                        <%= mode %>
+                    </span>
+
+                <% }) %>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="other-games">
+
+        <h2>Other Games</h2>
+
+        <% games.forEach(otherGame => { %>
+
+            <a
+                href="/game/<%= otherGame.id %>"
+                class="other-game"
+            >
+                <%= otherGame.title %>
+            </a>
+
+        <% }) %>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

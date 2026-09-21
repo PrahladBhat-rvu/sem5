@@ -1,31 +1,25 @@
-import { useEffect, useState } from "react";
-import { supabase } from "./lib/supabase";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Home from "./pages/Home";
+import Search from "./pages/Search";
+import Product from "./pages/Product";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Categories from "./pages/Categories";
+import "./index.css";
 
 function App() {
-  const [status, setStatus] = useState("Checking Supabase...");
-
-  useEffect(() => {
-    async function testConnection() {
-      const { error } = await supabase
-        .from("profiles")
-        .select("id")
-        .limit(1);
-
-      if (error) {
-        setStatus(`Supabase connected, but database test failed: ${error.message}`);
-      } else {
-        setStatus("Supabase connection works.");
-      }
-    }
-
-    testConnection();
-  }, []);
-
   return (
-    <div>
-      <h1>Vouch</h1>
-      <p>{status}</p>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/product/:id" element={<Product />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/categories" element={<Categories />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

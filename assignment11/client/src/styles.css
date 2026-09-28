@@ -1,0 +1,52 @@
+body {
+  margin: 0;
+  min-width: 320px;
+  background: #f5f7fb;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.hero {
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.hero h1 {
+  letter-spacing: -0.03em;
+}
+
+.demo-card {
+  max-width: 850px;
+  border-radius: 18px;
+}
+
+.connection-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 24px;
+  background: #f8f9fa;
+  border-radius: 14px;
+  border: 1px solid #e9ecef;
+}
+
+.arrow {
+  font-size: 28px;
+  color: #6c757d;
+}
+
+@media (max-width: 576px) {
+  .connection-box {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .arrow {
+    transform: rotate(90deg);
+    align-self: center;
+  }
+}

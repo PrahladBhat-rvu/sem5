@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { searchMovies } from "../api/tmdb";
+import { searchMovies, getTMDBImageUrl } from "../api/tmdb";
 
 function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -143,7 +143,7 @@ function Search() {
                 >
                   {movie.poster_path ? (
                     <img
-                      src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                      src={getTMDBImageUrl(movie.poster_path)}
                       alt={movie.title}
                     />
                   ) : (

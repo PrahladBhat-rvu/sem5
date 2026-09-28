@@ -9,7 +9,7 @@ const movies = [
     year: "2014",
     rating: "8.7",
     image:
-      "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+      "/api/image/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
   },
   {
     id: 2,
@@ -17,7 +17,7 @@ const movies = [
     year: "2008",
     rating: "9.0",
     image:
-      "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+      "/api/image/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
   },
   {
     id: 3,
@@ -25,7 +25,7 @@ const movies = [
     year: "2010",
     rating: "8.8",
     image:
-      "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
+      "/api/image/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
   },
   {
     id: 4,
@@ -33,7 +33,7 @@ const movies = [
     year: "2024",
     rating: "8.6",
     image:
-      "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
+      "/api/image/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
   },
 ];
 

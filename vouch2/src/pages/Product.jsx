@@ -9,7 +9,7 @@ const movies = {
     runtime: "2h 49m",
     rating: "8.7",
     poster:
-      "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+      "/api/image/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
     director: "Christopher Nolan",
     description:
       "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
@@ -22,7 +22,7 @@ const movies = {
     runtime: "2h 32m",
     rating: "9.0",
     poster:
-      "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+      "/api/image/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
     director: "Christopher Nolan",
     description:
       "Batman faces a criminal mastermind who throws Gotham into chaos and forces him to confront his limits.",
@@ -35,7 +35,7 @@ const movies = {
     runtime: "2h 28m",
     rating: "8.8",
     poster:
-      "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
+      "/api/image/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
     director: "Christopher Nolan",
     description:
       "A skilled thief who steals secrets through dreams is given a chance to erase his past by planting an idea in someone's mind.",
@@ -48,7 +48,7 @@ const movies = {
     runtime: "2h 46m",
     rating: "8.6",
     poster:
-      "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
+      "/api/image/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
     director: "Denis Villeneuve",
     description:
       "Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family.",

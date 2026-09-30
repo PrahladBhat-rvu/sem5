@@ -1,0 +1,27 @@
+const mongoose = require("mongoose");
+
+const childSchema = new mongoose.Schema({
+    firstName: {
+        type: String,
+        required: true
+    },
+    lastName: {
+        type: String,
+        required: true
+    },
+    age: {
+        type: Number,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    parentId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    }
+});
+
+module.exports = mongoose.model("Child", childSchema);

@@ -51,59 +51,6 @@ img {
 }
 
 /* =========================================================
-   NAVBAR
-   ========================================================= */
-
-.navbar {
-  position: fixed;
-  top: 18px;
-  left: 50%;
-  z-index: 1000;
-  width: calc(100% - 80px);
-  max-width: 1750px;
-  height: 76px;
-  padding: 0 30px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transform: translateX(-50%);
-  background: rgba(245, 244, 239, 0.82);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(17, 17, 17, 0.1);
-  border-radius: 18px;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.04);
-}
-
-.logo {
-  font-size: 30px;
-  font-weight: 900;
-  letter-spacing: -1.5px;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.nav-links a {
-  color: #111;
-}
-
-.nav-links a:hover {
-  opacity: 0.55;
-}
-
-.nav-links > a,
-.nav-dropdown-trigger {
-  position: relative;
-  padding: 28px 0;
-}
-
-/* =========================================================
    NAVBAR DROPDOWN
    ========================================================= */
 
@@ -188,9 +135,14 @@ img {
 
 .nav-actions,
 .nav-auth {
+  position: relative;
+  z-index: 2;
+
   display: flex;
   align-items: center;
   gap: 10px;
+
+  transition: gap 650ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .login-button,
@@ -202,7 +154,13 @@ img {
   font-weight: 700;
   transition:
     opacity 0.15s ease,
-    transform 0.15s ease;
+    transform 0.15s ease,
+    padding 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.navbar-scrolled .login-button,
+.navbar-scrolled .signup-button {
+  padding: 7px 13px;
 }
 
 .login-button {
@@ -224,6 +182,259 @@ img {
 .signup-button:active {
   transform: scale(0.97);
 }
+
+
+/* =========================================================
+   NAVBAR
+   ========================================================= */
+
+.navbar {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  z-index: 1000;
+
+  width: calc(100% - 80px);
+  max-width: 1750px;
+  height: 76px;
+
+  padding: 0 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  transform: translateX(-50%);
+
+  background: rgba(245, 244, 239, 0.82);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  border: 1px solid rgba(17, 17, 17, 0.1);
+  border-radius: 18px;
+
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.04);
+
+  transition:
+    top 650ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 650ms cubic-bezier(0.22, 1, 0.36, 1),
+    height 650ms cubic-bezier(0.22, 1, 0.36, 1),
+    padding 650ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-radius 650ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 650ms ease,
+    box-shadow 650ms ease;
+}
+
+.logo {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+
+  transition:
+    font-size 650ms cubic-bezier(0.22, 1, 0.36, 1),
+    letter-spacing 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  transition:
+    gap 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-links a {
+  color: #111;
+}
+
+.nav-links a:hover {
+  opacity: 0.55;
+}
+
+.nav-links > a,
+.nav-dropdown-trigger {
+  position: relative;
+  padding: 28px 0;
+
+  transition:
+    padding 650ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 150ms ease;
+}
+
+.navbar-scrolled {
+  top: 6px;
+  width: calc(100% - 100px);
+  height: 46px;
+
+  padding: 0 22px;
+
+  transform: translateX(-50%);
+
+  background: rgba(245, 244, 239, 0.96);
+
+  border: none;
+  border-radius: 0;
+
+  box-shadow: none;
+
+  overflow: hidden;
+}
+
+.navbar-scrolled .logo {
+  font-size: 18px;
+  letter-spacing: -0.7px;
+}
+
+.navbar-scrolled .nav-links {
+  gap: 28px;
+}
+
+.navbar-scrolled .nav-links > a,
+.navbar-scrolled .nav-dropdown-trigger {
+  padding: 12px 0;
+}
+
+.nav-dropdown {
+  position: relative;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+}
+
+.nav-dropdown::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: -30px;
+  width: calc(100% + 60px);
+  height: 25px;
+}
+
+.category-menu {
+  position: absolute;
+  top: calc(100% + 18px);
+  left: 50%;
+
+  width: 760px;
+  padding: 18px;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+
+  transform: translateX(-50%) translateY(8px);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  background: rgba(250, 249, 246, 0.96);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  border: 1px solid rgba(17, 17, 17, 0.1);
+  border-radius: 16px;
+
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    visibility 0.18s ease;
+}
+
+.nav-dropdown:hover .category-menu,
+.nav-dropdown:focus-within .category-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.category-column {
+  padding: 14px;
+}
+
+.category-column h4 {
+  margin-bottom: 12px;
+  color: #777;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.category-column a {
+  display: block;
+  padding: 9px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.category-column a:hover {
+  background: rgba(17, 17, 17, 0.07);
+  opacity: 1;
+}
+
+.nav-actions,
+.nav-auth {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  transition:
+    gap 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.login-button,
+.signup-button {
+  padding: 11px 17px;
+
+  border: 0;
+  border-radius: 8px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    padding 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.navbar-scrolled .login-button,
+.navbar-scrolled .signup-button {
+  padding: 7px 13px;
+}
+
+.login-button {
+  background: #111;
+  color: white !important;
+}
+
+.signup-button {
+  background: #ff6957;
+  color: white !important;
+}
+
+.login-button:hover,
+.signup-button:hover {
+  opacity: 0.82;
+}
+
+.login-button:active,
+.signup-button:active {
+  transform: scale(0.97);
+}
+
 
 /* =========================================================
    HOME

@@ -1,8 +1,27 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 40);
+    };
+
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
+
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${scrolled ? "navbar-scrolled" : ""}`}>
       <Link to="/" className="logo">
         VOUCH
       </Link>
@@ -12,9 +31,11 @@ function Navbar() {
 
         <Link to="/search">Discover</Link>
 
-        {/* CATEGORIES */}
         <div className="nav-dropdown">
-          <Link to="/categories" className="nav-dropdown-trigger">
+          <Link
+            to="/categories"
+            className="nav-dropdown-trigger"
+          >
             Categories
           </Link>
 
@@ -68,18 +89,25 @@ function Navbar() {
             <div className="category-column">
               <h4>Books</h4>
 
-              <Link to="/category/books/fiction">Fiction</Link>
+              <Link to="/category/books/fiction">
+                Fiction
+              </Link>
               <Link to="/category/books/non-fiction">
                 Non-fiction
               </Link>
-              <Link to="/category/books/mystery">Mystery</Link>
-              <Link to="/category/books/fantasy">Fantasy</Link>
-              <Link to="/category/books/sci-fi">Sci-Fi</Link>
+              <Link to="/category/books/mystery">
+                Mystery
+              </Link>
+              <Link to="/category/books/fantasy">
+                Fantasy
+              </Link>
+              <Link to="/category/books/sci-fi">
+                Sci-Fi
+              </Link>
             </div>
           </div>
         </div>
 
-        {/* RESTORED */}
         <Link to="/new-releases">New Releases</Link>
 
         <Link to="/search">About</Link>

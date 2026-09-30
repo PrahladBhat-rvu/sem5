@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Child</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+    <h1>Update Child</h1>
+
+    <form id="updateForm">
+
+        <label>First Name:</label>
+        <input
+            type="text"
+            id="firstName"
+            value="<%= child.firstName %>"
+            required
+        >
+
+        <br><br>
+
+        <label>Last Name:</label>
+        <input
+            type="text"
+            id="lastName"
+            value="<%= child.lastName %>"
+            required
+        >
+
+        <br><br>
+
+        <label>Age:</label>
+        <input
+            type="number"
+            id="age"
+            value="<%= child.age %>"
+            required
+        >
+
+        <br><br>
+
+        <label>Email:</label>
+        <input
+            type="email"
+            id="email"
+            value="<%= child.email %>"
+            required
+        >
+
+        <br><br>
+
+        <button type="submit">
+            Update Child
+        </button>
+
+    </form>
+
+    <script>
+        document.getElementById("updateForm").addEventListener("submit", async function(event) {
+
+            event.preventDefault();
+
+            const data = {
+                firstName: document.getElementById("firstName").value,
+                lastName: document.getElementById("lastName").value,
+                age: document.getElementById("age").value,
+                email: document.getElementById("email").value
+            };
+
+            const response = await fetch("/children/<%= child._id %>", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                alert("Child updated successfully!");
+                window.location.href = "/users/<%= child.parentId %>";
+            } else {
+                alert("Error updating child");
+            }
+        });
+    </script>
+
+</body>
+
+</html>

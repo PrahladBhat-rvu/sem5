@@ -1,320 +1,614 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import {
+  getMovieDetails,
+  getTMDBImageUrl,
+} from "../api/tmdb";
 
-const movies = {
-  1: {
-    title: "Interstellar",
-    year: "2014",
-    genre: "Sci-Fi · Drama · Mystery",
-    runtime: "2h 49m",
-    rating: "8.7",
-    poster:
-      "/api/image/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
-    director: "Christopher Nolan",
-    description:
-      "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
-  },
+function getPosterUrl(movie) {
+  // ----------------------------------------------------------
+  // OMDb poster
+  // ----------------------------------------------------------
 
-  2: {
-    title: "The Dark Knight",
-    year: "2008",
-    genre: "Action · Crime · Drama",
-    runtime: "2h 32m",
-    rating: "9.0",
-    poster:
-      "/api/image/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
-    director: "Christopher Nolan",
-    description:
-      "Batman faces a criminal mastermind who throws Gotham into chaos and forces him to confront his limits.",
-  },
+  if (movie?.Poster && movie.Poster !== "N/A") {
+    return `/api/image/omdb?url=${encodeURIComponent(
+      movie.Poster
+    )}`;
+  }
 
-  3: {
-    title: "Inception",
-    year: "2010",
-    genre: "Action · Sci-Fi · Thriller",
-    runtime: "2h 28m",
-    rating: "8.8",
-    poster:
-      "/api/image/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
-    director: "Christopher Nolan",
-    description:
-      "A skilled thief who steals secrets through dreams is given a chance to erase his past by planting an idea in someone's mind.",
-  },
+  // Some normalized responses may use "poster"
+  if (movie?.poster && movie.poster !== "N/A") {
+    return `/api/image/omdb?url=${encodeURIComponent(
+      movie.poster
+    )}`;
+  }
 
-  4: {
-    title: "Dune: Part Two",
-    year: "2024",
-    genre: "Sci-Fi · Drama · War",
-    runtime: "2h 46m",
-    rating: "8.6",
-    poster:
-      "/api/image/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
-    director: "Denis Villeneuve",
-    description:
-      "Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family.",
-  },
-};
+  // ----------------------------------------------------------
+  // TMDB poster
+  // ----------------------------------------------------------
 
-const reviews = [
-  {
-    user: "alex",
-    name: "Alex",
-    rating: 5,
-    date: "3 days ago",
-    title: "One of those movies that stays with you",
-    text: "One of those movies that stays with you long after it ends.",
-  },
-  {
-    user: "maria",
-    name: "Maria",
-    rating: 5,
-    date: "1 week ago",
-    title: "The visuals and story work perfectly",
-    text: "The visuals, music and story all come together perfectly.",
-  },
-  {
-    user: "rahul",
-    name: "Rahul",
-    rating: 4,
-    date: "2 weeks ago",
-    title: "Definitely worth watching on a big screen",
-    text: "A great experience. Definitely worth watching on a big screen.",
-  },
-];
+  if (movie?.poster_path) {
+    return getTMDBImageUrl(movie.poster_path);
+  }
 
-function Stars({ rating }) {
+  return null;
+}
+
+function getTitle(movie) {
   return (
-    <span className="stars" aria-label={`${rating} out of 5 stars`}>
-      {"★".repeat(rating)}
-      {"☆".repeat(5 - rating)}
-    </span>
+    movie?.Title ||
+    movie?.title ||
+    movie?.original_title ||
+    "Untitled"
   );
+}
+
+function getYear(movie) {
+  if (movie?.Year && movie.Year !== "N/A") {
+    return movie.Year;
+  }
+
+  if (movie?.year) {
+    return movie.year;
+  }
+
+  if (movie?.release_date) {
+    return movie.release_date.slice(0, 4);
+  }
+
+  return "—";
+}
+
+function getRating(movie) {
+  // OMDb IMDb rating
+  if (
+    movie?.imdbRating &&
+    movie.imdbRating !== "N/A"
+  ) {
+    const rating = Number(movie.imdbRating);
+
+    if (!Number.isNaN(rating)) {
+      return rating;
+    }
+  }
+
+  // TMDB rating
+  if (
+    movie?.vote_average !== undefined &&
+    movie?.vote_average !== null
+  ) {
+    const rating = Number(movie.vote_average);
+
+    if (!Number.isNaN(rating) && rating > 0) {
+      return rating;
+    }
+  }
+
+  return null;
+}
+
+function getGenres(movie) {
+  // ----------------------------------------------------------
+  // OMDb
+  // ----------------------------------------------------------
+
+  if (
+    movie?.Genre &&
+    movie.Genre !== "N/A"
+  ) {
+    return movie.Genre;
+  }
+
+  // ----------------------------------------------------------
+  // TMDB
+  // ----------------------------------------------------------
+
+  if (Array.isArray(movie?.genres)) {
+    return movie.genres
+      .map((genre) => genre.name)
+      .filter(Boolean)
+      .join(" · ");
+  }
+
+  return "—";
+}
+
+function getRuntime(movie) {
+  // OMDb gives:
+  // "152 min"
+  //
+  // TMDB gives:
+  // runtime: 152
+
+  if (
+    movie?.Runtime &&
+    movie.Runtime !== "N/A"
+  ) {
+    return movie.Runtime;
+  }
+
+  if (
+    movie?.runtime !== undefined &&
+    movie?.runtime !== null
+  ) {
+    const minutes = Number(movie.runtime);
+
+    if (!Number.isNaN(minutes) && minutes > 0) {
+      const hours = Math.floor(minutes / 60);
+      const remainingMinutes = minutes % 60;
+
+      if (hours > 0) {
+        return `${hours}h ${
+          remainingMinutes > 0
+            ? `${remainingMinutes}m`
+            : ""
+        }`.trim();
+      }
+
+      return `${minutes}m`;
+    }
+  }
+
+  return "—";
+}
+
+function getPlot(movie) {
+  // OMDb
+  if (
+    movie?.Plot &&
+    movie.Plot !== "N/A"
+  ) {
+    return movie.Plot;
+  }
+
+  // TMDB
+  if (movie?.overview) {
+    return movie.overview;
+  }
+
+  return "No description available.";
+}
+
+function getCast(movie) {
+  // ----------------------------------------------------------
+  // OMDb
+  // ----------------------------------------------------------
+
+  if (
+    movie?.Actors &&
+    movie.Actors !== "N/A"
+  ) {
+    return movie.Actors
+      .split(",")
+      .map((actor) => actor.trim())
+      .filter(Boolean);
+  }
+
+  // ----------------------------------------------------------
+  // TMDB
+  // ----------------------------------------------------------
+
+  if (Array.isArray(movie?.credits?.cast)) {
+    return movie.credits.cast
+      .slice(0, 10)
+      .map((person) => person.name)
+      .filter(Boolean);
+  }
+
+  // Some APIs may return cast directly
+  if (Array.isArray(movie?.cast)) {
+    return movie.cast
+      .slice(0, 10)
+      .map((person) =>
+        typeof person === "string"
+          ? person
+          : person.name
+      )
+      .filter(Boolean);
+  }
+
+  return [];
+}
+
+function getDirector(movie) {
+  // ----------------------------------------------------------
+  // OMDb
+  // ----------------------------------------------------------
+
+  if (
+    movie?.Director &&
+    movie.Director !== "N/A"
+  ) {
+    return movie.Director;
+  }
+
+  // ----------------------------------------------------------
+  // TMDB
+  // ----------------------------------------------------------
+
+  if (Array.isArray(movie?.credits?.crew)) {
+    const directors = movie.credits.crew
+      .filter(
+        (person) => person.job === "Director"
+      )
+      .map((person) => person.name)
+      .filter(Boolean);
+
+    if (directors.length > 0) {
+      return directors.join(", ");
+    }
+  }
+
+  return "Unknown";
+}
+
+function getWriters(movie) {
+  // ----------------------------------------------------------
+  // OMDb
+  // ----------------------------------------------------------
+
+  if (
+    movie?.Writer &&
+    movie.Writer !== "N/A"
+  ) {
+    return movie.Writer;
+  }
+
+  // ----------------------------------------------------------
+  // TMDB
+  // ----------------------------------------------------------
+
+  if (Array.isArray(movie?.credits?.crew)) {
+    const writers = movie.credits.crew
+      .filter((person) =>
+        [
+          "Writer",
+          "Screenplay",
+          "Story",
+        ].includes(person.job)
+      )
+      .map((person) => person.name)
+      .filter(Boolean);
+
+    const uniqueWriters = [
+      ...new Set(writers),
+    ];
+
+    if (uniqueWriters.length > 0) {
+      return uniqueWriters.join(", ");
+    }
+  }
+
+  return "Unknown";
 }
 
 function Product() {
   const { id } = useParams();
 
-  const movie = movies[id] || movies[1];
+  const [movie, setMovie] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadMovie() {
+      try {
+        setLoading(true);
+        setError("");
+
+        // ----------------------------------------------------
+        // First request
+        //
+        // Can be:
+        //
+        // /api/movie/tt0468569
+        //
+        // OR
+        //
+        // /api/movie/550
+        // ----------------------------------------------------
+
+        const data = await getMovieDetails(id);
+
+        if (cancelled) {
+          return;
+        }
+
+        let finalMovie = data;
+
+        // ----------------------------------------------------
+        // TMDB IMDb fallback
+        //
+        // If the server used TMDB /find to resolve an IMDb ID,
+        // the first response may contain:
+        //
+        // id: 155
+        // source: "tmdb"
+        //
+        // but not credits.
+        //
+        // Fetch the numeric TMDB movie endpoint to get:
+        //
+        // credits.cast
+        // credits.crew
+        // ----------------------------------------------------
+
+        const needsCredits =
+          data?.source === "tmdb" &&
+          data?.id &&
+          !data?.credits;
+
+        if (needsCredits) {
+          try {
+            const detailedTMDBMovie =
+              await getMovieDetails(data.id);
+
+            if (
+              detailedTMDBMovie &&
+              !cancelled
+            ) {
+              finalMovie = {
+                ...data,
+                ...detailedTMDBMovie,
+
+                // Preserve the original source
+                // and IMDb ID.
+                source: "tmdb",
+                imdbID:
+                  data.imdbID ||
+                  data.external_ids?.imdb_id ||
+                  id,
+              };
+            }
+          } catch (creditError) {
+            console.warn(
+              "Could not load TMDB credits:",
+              creditError
+            );
+
+            // We still use the first response.
+            finalMovie = data;
+          }
+        }
+
+        if (!cancelled) {
+          setMovie(finalMovie);
+        }
+      } catch (err) {
+        console.error(
+          "Movie details error:",
+          err
+        );
+
+        if (!cancelled) {
+          setError(
+            "Could not load this movie."
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadMovie();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
+
+  // ==========================================================
+  // STATES
+  // ==========================================================
+
+  if (loading) {
+    return (
+      <div>
+        <Navbar />
+
+        <main className="product-page">
+          <div className="product-state">
+            Loading movie...
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (error || !movie) {
+    return (
+      <div>
+        <Navbar />
+
+        <main className="product-page">
+          <div className="product-state product-error">
+            {error || "Movie not found."}
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // ==========================================================
+  // NORMALIZED DISPLAY VALUES
+  // ==========================================================
+
+  const title = getTitle(movie);
+  const year = getYear(movie);
+  const poster = getPosterUrl(movie);
+  const rating = getRating(movie);
+  const genre = getGenres(movie);
+  const runtime = getRuntime(movie);
+  const plot = getPlot(movie);
+
+  const cast = getCast(movie);
+  const director = getDirector(movie);
+  const writers = getWriters(movie);
 
   return (
-    <div className="site">
+    <div>
       <Navbar />
 
       <main className="product-page">
-        {/* PRODUCT HERO */}
         <section className="product-hero">
+          {/* ==================================================
+              POSTER
+          ================================================== */}
+
           <div className="product-poster">
-            <img src={movie.poster} alt={movie.title} />
+            {poster ? (
+              <img
+                src={poster}
+                alt={title}
+              />
+            ) : (
+              <div className="product-poster-placeholder">
+                No image
+              </div>
+            )}
           </div>
 
-          <div className="product-info">
-            <p className="product-type">MOVIE</p>
+          {/* ==================================================
+              MAIN INFORMATION
+          ================================================== */}
 
-            <h1>{movie.title}</h1>
+          <div className="product-content">
+            <p className="eyebrow">
+              MOVIE
+            </p>
+
+            <h1>{title}</h1>
 
             <div className="product-meta">
-              <span>{movie.year}</span>
-              <span>{movie.genre}</span>
-              <span>{movie.runtime}</span>
+              <span>{year}</span>
+
+              <span>•</span>
+
+              <span>{runtime}</span>
+
+              <span>•</span>
+
+              <span>{genre}</span>
             </div>
 
-            <div className="main-rating">
-              <strong>★ {movie.rating}</strong>
+            {/* Rating */}
+
+            <div className="product-rating">
+              <span className="rating-star">
+                ★
+              </span>
+
+              <strong>
+                {rating !== null
+                  ? rating.toFixed(1)
+                  : "—"}
+              </strong>
+
               <span>/ 10</span>
             </div>
 
-            <p className="director">
-              Directed by <strong>{movie.director}</strong>
-            </p>
+            {/* Plot */}
 
-            <p className="product-description">
-              {movie.description}
-            </p>
+            <div className="product-description">
+              <h2>About the movie</h2>
 
-            <div className="product-actions">
-              <button className="primary vouch-button">
-                + Vouch for this
-              </button>
-
-              <Link to="/search">Back to search</Link>
+              <p>{plot}</p>
             </div>
+
+            {/* =================================================
+                DIRECTOR
+            ================================================= */}
+
+            <div className="product-detail">
+              <span className="detail-label">
+                Director
+              </span>
+
+              <span className="detail-value">
+                {director}
+              </span>
+            </div>
+
+            {/* =================================================
+                WRITERS
+            ================================================= */}
+
+            <div className="product-detail">
+              <span className="detail-label">
+                Writers
+              </span>
+
+              <span className="detail-value">
+                {writers}
+              </span>
+            </div>
+
+            {/* =================================================
+                CAST
+            ================================================= */}
+
+            {cast.length > 0 && (
+              <div className="product-cast">
+                <h2>Cast</h2>
+
+                <div className="cast-list">
+                  {cast.map(
+                    (actor, index) => (
+                      <span
+                        className="cast-chip"
+                        key={`${actor}-${index}`}
+                      >
+                        {actor}
+                      </span>
+                    )
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* =================================================
+                BACK LINK
+            ================================================= */}
+
+            <Link
+              to="/search"
+              className="back-to-search"
+            >
+              ← Back to search
+            </Link>
           </div>
         </section>
 
-        {/* EXTERNAL REVIEWS */}
-        <section className="external-reviews">
-          <div className="product-section-heading">
-            <p className="eyebrow">REVIEWS FROM</p>
-            <h2>What the internet thinks.</h2>
-          </div>
+        {/* ====================================================
+            SOURCE DEBUG / METADATA
+            ==================================================== */}
 
-          <div className="external-grid">
-            <div className="external-card">
-              <span>IMDb</span>
+        <section className="product-source">
+          <span>
+            Data source:{" "}
+            <strong>
+              {movie.source === "tmdb"
+                ? "TMDB"
+                : "OMDb"}
+            </strong>
+          </span>
 
-              <div>
-                <strong>{movie.rating}</strong>
-                <small>/ 10</small>
-              </div>
-            </div>
+          {movie.imdbID && (
+            <span>
+              IMDb: {movie.imdbID}
+            </span>
+          )}
 
-            <div className="external-card">
-              <span>Rotten Tomatoes</span>
-
-              <div>
-                <strong>94%</strong>
-                <small>Tomatometer</small>
-              </div>
-            </div>
-
-            <div className="external-card">
-              <span>Metacritic</span>
-
-              <div>
-                <strong>74</strong>
-                <small>Metascore</small>
-              </div>
-            </div>
-          </div>
+          {movie.tmdbID && (
+            <span>
+              TMDB: {movie.tmdbID}
+            </span>
+          )}
         </section>
-
-        {/* VOUCH REVIEWS */}
-        <section className="vouch-reviews">
-          <div className="reviews-heading">
-            <div>
-              <p className="eyebrow">VOUCH REVIEWS</p>
-              <h2>What people here think.</h2>
-            </div>
-
-            <button className="write-review">
-              Write a review →
-            </button>
-          </div>
-
-          <div className="review-layout">
-            {/* RATING SUMMARY */}
-            <div className="review-summary">
-              <div className="review-score">
-                <strong>4.7</strong>
-
-                <Stars rating={5} />
-
-                <span>Based on 128 reviews</span>
-              </div>
-
-              <div className="rating-bars">
-                <div className="rating-row">
-                  <span>5</span>
-
-                  <div className="bar">
-                    <div
-                      className="bar-fill"
-                      style={{ width: "82%" }}
-                    />
-                  </div>
-
-                  <span>82%</span>
-                </div>
-
-                <div className="rating-row">
-                  <span>4</span>
-
-                  <div className="bar">
-                    <div
-                      className="bar-fill"
-                      style={{ width: "12%" }}
-                    />
-                  </div>
-
-                  <span>12%</span>
-                </div>
-
-                <div className="rating-row">
-                  <span>3</span>
-
-                  <div className="bar">
-                    <div
-                      className="bar-fill"
-                      style={{ width: "4%" }}
-                    />
-                  </div>
-
-                  <span>4%</span>
-                </div>
-
-                <div className="rating-row">
-                  <span>2</span>
-
-                  <div className="bar">
-                    <div
-                      className="bar-fill"
-                      style={{ width: "1%" }}
-                    />
-                  </div>
-
-                  <span>1%</span>
-                </div>
-
-                <div className="rating-row">
-                  <span>1</span>
-
-                  <div className="bar">
-                    <div
-                      className="bar-fill"
-                      style={{ width: "1%" }}
-                    />
-                  </div>
-
-                  <span>1%</span>
-                </div>
-              </div>
-            </div>
-
-            {/* INDIVIDUAL REVIEWS */}
-            <div className="review-list">
-              {reviews.map((review) => (
-                <article className="review-item" key={review.user}>
-                  <div className="review-user">
-                    <div className="avatar">
-                      {review.user[0].toUpperCase()}
-                    </div>
-
-                    <div className="review-user-info">
-                      <div className="review-user-name">
-                        <strong>{review.name}</strong>
-
-                        <span className="verified-badge">
-                          Verified
-                        </span>
-                      </div>
-
-                      <div className="review-meta">
-                        <Stars rating={review.rating} />
-                        <span>{review.date}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="review-content">
-                    <h3>{review.title}</h3>
-
-                    <p>{review.text}</p>
-
-                    <div className="review-actions">
-                      <button>♡ Like</button>
-                      <button>Comment</button>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* BACK */}
-        <div className="back-link">
-          <Link to="/search">← Back to search</Link>
-        </div>
       </main>
     </div>
   );

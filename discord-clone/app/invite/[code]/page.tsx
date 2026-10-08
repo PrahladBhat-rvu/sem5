@@ -1,0 +1,2 @@
+import {redirect} from "next/navigation";import {getCurrentUser} from "@/lib/session";import {db} from "@/lib/prisma";
+export default async function Invite({params}:{params:{code:string}}){const u=await getCurrentUser();if(!u)redirect("/login");const s=await db.server.findUnique({where:{inviteCode:params.code}});if(!s)return <div className="min-h-screen grid place-items-center bg-[#1e1f22]">Invalid invite.</div>;await db.member.upsert({where:{userId_serverId:{userId:u.id,serverId:s.id}},update:{},create:{userId:u.id,serverId:s.id,role:"GUEST"}});redirect("/channels")}

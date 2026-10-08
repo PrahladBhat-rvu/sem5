@@ -1,0 +1,2 @@
+import {NextResponse} from "next/server";import {db} from "@/lib/prisma";import {requireUser} from "@/lib/session";
+export async function GET(req:Request){const u=await requireUser();const q=new URL(req.url).searchParams.get("q")||"";const users=await db.user.findMany({where:{username:{contains:q}},select:{id:true,username:true,avatar:true,status:true,bio:true},take:20});return NextResponse.json(users.filter(x=>x.id!==u.id))}

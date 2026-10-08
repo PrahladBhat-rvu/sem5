@@ -4,108 +4,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+
+    <title>Family Tree</title>
+
     <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
 
-<div class="container">
+<div class="page">
 
-    <div class="card">
-        <h1>User Profile</h1>
-
-        <h2>
-            <%= user.firstName %> <%= user.lastName %>
-        </h2>
-
-        <p class="info">
-            <strong>Email:</strong> <%= user.email %>
-        </p>
-
-        <p class="info">
-            <strong>Phone:</strong> <%= user.phone %>
-        </p>
-    </div>
-
-    <div class="card">
-
-        <h2>Children</h2>
-
-        <% if (children.length === 0) { %>
-
-            <p class="empty">
-                No children found for this user.
+    <!-- Header -->
+    <header class="header">
+        <div>
+            <p class="eyebrow">FAMILY MANAGEMENT</p>
+            <h1>Family Tree</h1>
+            <p class="subtitle">
+                A visual view of your family
             </p>
+        </div>
 
-        <% } else { %>
+        <a
+            class="add-button"
+            href="/users/<%= user._id %>/children/add"
+        >
+            + Add Family Member
+        </a>
+    </header>
 
-            <% children.forEach(child => { %>
 
-                <div class="child-card">
+    <!-- Family Tree -->
+    <main class="tree-container">
 
-                    <h3>
-                        <%= child.firstName %> <%= child.lastName %>
-                    </h3>
+        <!-- Parent -->
+        <section class="tree-level parent-level">
+
+            <div class="person-card parent-card">
+
+                <div class="avatar">
+                    <%= user.firstName.charAt(0) %>
+                </div>
+
+                <div class="person-info">
+
+                    <span class="relationship">
+                        PARENT
+                    </span>
+
+                    <h2>
+                        <%= user.firstName %>
+                        <%= user.lastName %>
+                    </h2>
 
                     <p>
-                        <strong>Age:</strong>
-                        <%= child.age %>
+                        <%= user.email %>
                     </p>
 
                     <p>
-                        <strong>Email:</strong>
-                        <%= child.email %>
+                        <%= user.phone %>
                     </p>
-
-                    <a
-                        class="button primary"
-                        href="/children/<%= child._id %>/edit"
-                    >
-                        Update
-                    </a>
-
-                    <button
-                        class="danger"
-                        onclick="deleteChild('<%= child._id %>')"
-                    >
-                        Delete
-                    </button>
 
                 </div>
 
-            <% }); %>
+            </div>
+
+        </section>
+
+
+        <!-- Connector from parent -->
+        <% if (children.length > 0) { %>
+
+            <div class="tree-connector">
+
+                <div class="vertical-line"></div>
+
+                <div class="horizontal-line"></div>
+
+            </div>
 
         <% } %>
 
-        <a
-            class="button"
-            href="/users/<%= user._id %>/children/add"
-        >
-            + Add Child
-        </a>
 
-    </div>
+        <!-- Children -->
+        <section class="tree-level children-level">
+
+            <% if (children.length === 0) { %>
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        +
+                    </div>
+
+                    <h2>No children yet</h2>
+
+                    <p>
+                        Add a family member to start building your family tree.
+                    </p>
+
+                    <a
+                        class="add-button"
+                        href="/users/<%= user._id %>/children/add"
+                    >
+                        Add First Child
+                    </a>
+
+                </div>
+
+            <% } else { %>
+
+                <% children.forEach(child => { %>
+
+                    <div class="child-wrapper">
+
+                        <div class="child-connector"></div>
+
+                        <article class="person-card child-card">
+
+                            <div class="avatar child-avatar">
+                                <%= child.firstName.charAt(0) %>
+                            </div>
+
+                            <div class="person-info">
+
+                                <span class="relationship">
+                                    CHILD
+                                </span>
+
+                                <h2>
+                                    <%= child.firstName %>
+                                    <%= child.lastName %>
+                                </h2>
+
+                                <p>
+                                    <strong>Age:</strong>
+                                    <%= child.age %>
+                                </p>
+
+                                <p>
+                                    <%= child.email %>
+                                </p>
+
+                                <div class="actions">
+
+                                    <a
+                                        class="edit-button"
+                                        href="/children/<%= child._id %>/edit"
+                                    >
+                                        Edit
+                                    </a>
+
+                                    <button
+                                        class="delete-button"
+                                        type="button"
+                                        onclick="deleteChild('<%= child._id %>')"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    </div>
+
+                <% }); %>
+
+            <% } %>
+
+        </section>
+
+    </main>
 
 </div>
 
+
 <script>
+
 async function deleteChild(childId) {
 
-    if (!confirm("Are you sure you want to delete this child?")) {
+    const confirmed = confirm(
+        "Are you sure you want to remove this family member?"
+    );
+
+    if (!confirmed) {
         return;
     }
 
-    const response = await fetch(`/children/${childId}`, {
-        method: "DELETE"
-    });
+    try {
 
-    if (response.ok) {
-        location.reload();
-    } else {
-        alert("Error deleting child");
+        const response = await fetch(
+            `/children/${childId}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        if (response.ok) {
+
+            window.location.reload();
+
+        } else {
+
+            alert("Unable to delete family member.");
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Something went wrong.");
+
     }
+
 }
+
 </script>
 
 </body>

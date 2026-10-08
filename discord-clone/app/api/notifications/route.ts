@@ -1,0 +1,3 @@
+import {NextResponse} from "next/server";import {db} from "@/lib/prisma";import {requireUser} from "@/lib/session";
+export async function GET(){const u=await requireUser();return NextResponse.json(await db.notification.findMany({where:{userId:u.id},orderBy:{createdAt:"desc"},take:30}))}
+export async function PATCH(){const u=await requireUser();await db.notification.updateMany({where:{userId:u.id,read:false},data:{read:true}});return NextResponse.json({ok:true})}

@@ -1,0 +1,2 @@
+import {NextResponse} from "next/server";import {db} from "@/lib/prisma";import {requireUser} from "@/lib/session";
+export async function POST(_:Request,{params}:{params:{code:string}}){const u=await requireUser();const s=await db.server.findUnique({where:{inviteCode:params.code}});if(!s)return NextResponse.json({error:"Invalid invite"},{status:404});await db.member.upsert({where:{userId_serverId:{userId:u.id,serverId:s.id}},update:{},create:{userId:u.id,serverId:s.id,role:"GUEST"}});return NextResponse.json(s)}

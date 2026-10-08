@@ -1,0 +1,2 @@
+import LoginForm from "@/components/login-form";
+export default function Login(){return <main className="min-h-screen grid place-items-center bg-[#1e1f22] p-6"><div className="w-full max-w-md"><div className="mb-7 text-center"><div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-[#5865f2] text-3xl font-black">D</div><h1 className="text-3xl font-bold">Welcome back!</h1><p className="mt-2 text-[#b5bac1]">Your community is waiting.</p></div><LoginForm/></div></main>}

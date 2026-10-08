@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String           @id @default(cuid())
+  username     String           @unique
+  password     String
+  avatar       String?
+  status       String           @default("ONLINE")
+  bio          String?
+  createdAt    DateTime         @default(now())
+  members      Member[]
+  
+  reactions    Reaction[]
+  sentDMs      DirectMessage[]  @relation("SentDMs")
+  receivedDMs  DirectMessage[]  @relation("ReceivedDMs")
+  notifications Notification[]
+}
+
+model Server {
+  id         String    @id @default(cuid())
+  name       String
+  imageUrl   String?
+  inviteCode String    @unique
+  createdAt  DateTime  @default(now())
+  channels   Channel[]
+  members    Member[]
+}
+
+model Member {
+  id        String    @id @default(cuid())
+  role      String    @default("GUEST")
+  userId    String
+  serverId  String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  server    Server    @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  messages  Message[]
+  createdAt DateTime  @default(now())
+  @@unique([userId, serverId])
+}
+
+model Channel {
+  id        String    @id @default(cuid())
+  name      String
+  type      String    @default("TEXT")
+  topic     String?
+  serverId  String
+  server    Server    @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  messages  Message[]
+  createdAt DateTime  @default(now())
+  @@unique([name, serverId])
+}
+
+model Message {
+  id             String     @id @default(cuid())
+  content        String
+  memberId       String
+  channelId      String
+  deleted        Boolean    @default(false)
+  edited         Boolean    @default(false)
+  attachmentUrl  String?
+  attachmentName String?
+  replyToId      String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  member         Member     @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  channel        Channel    @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  reactions      Reaction[]
+  @@index([channelId, createdAt])
+}
+
+model Reaction {
+  id        String   @id @default(cuid())
+  emoji     String
+  userId    String
+  messageId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  @@unique([emoji, userId, messageId])
+}
+
+model DirectMessage {
+  id         String   @id @default(cuid())
+  content    String
+  senderId   String
+  receiverId String
+  attachmentUrl String?
+  attachmentName String?
+  createdAt  DateTime @default(now())
+  sender     User     @relation("SentDMs", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver   User     @relation("ReceivedDMs", fields: [receiverId], references: [id], onDelete: Cascade)
+  @@index([senderId, receiverId, createdAt])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  body      String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

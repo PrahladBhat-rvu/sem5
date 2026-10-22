@@ -1,0 +1,45 @@
+<%- include('partials/header', { title }) %>
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow"><span class="eyebrow-dot"></span> THE CAMPUS COMMUNITY NETWORK</div>
+    <h1>Lost something?<br><span>Let's bring it home.</span></h1>
+    <p class="hero-description">A missing water bottle, a set of keys, your favourite headphones. Small things matter. Find what you've lost, return what you've found.</p>
+    <div class="hero-actions"><a class="button button-primary" href="/lost-items">Find a lost item <span>↗</span></a><a class="button button-ghost" href="/found-items">Browse found items</a></div>
+    <div class="hero-note"><span class="avatar-stack"><i>✦</i><i>⌂</i><i>◎</i></span><span>One campus. A little more thoughtful.</span></div>
+  </div>
+  <div class="hero-art" aria-label="Illustration of lost and found belongings">
+    <div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
+    <div class="art-label label-top">ITEM RECOVERY <span>↗</span></div>
+    <div class="float-card card-bottle"><span class="object-icon bottle">▮</span><span><b>Steel bottle</b><small>Library · Block C</small></span><span class="tiny-check">✓</span></div>
+    <div class="float-card card-keys"><span class="object-icon keys">⌘</span><span><b>Keys & keychain</b><small>Near the cafeteria</small></span></div>
+    <div class="float-card card-earbuds"><span class="object-icon buds">◖</span><span><b>Wireless earbuds</b><small>Recently reported</small></span></div>
+    <div class="art-center"><div class="center-ring"><span>LF</span></div><span class="center-caption">FOUND WITH CARE</span></div>
+    <div class="art-label label-bottom">GOOD THINGS FIND THEIR WAY BACK <span>✳</span></div>
+  </div>
+</section>
+<section class="stats-grid">
+  <div class="stat-card"><span class="stat-icon violet">⌕</span><div><strong><%= lostCount %></strong><span>Open lost reports</span></div><span class="stat-arrow">↗</span></div>
+  <div class="stat-card"><span class="stat-icon mint">✓</span><div><strong><%= foundCount %></strong><span>Items waiting for owners</span></div><span class="stat-arrow">↗</span></div>
+  <div class="stat-card"><span class="stat-icon amber">♙</span><div><strong><%= studentCount %></strong><span>Community members</span></div><span class="stat-arrow">↗</span></div>
+</section>
+<section class="section-block">
+  <div class="section-heading"><div><div class="eyebrow">HOW IT WORKS</div><h2>Three steps. One less worry.</h2></div><span class="section-index">01 — 03</span></div>
+  <div class="steps-grid">
+    <a class="step-card" href="/lost-items"><span class="step-number">01 / SEARCH</span><div class="step-illustration search-illus">⌕</div><h3>Look around</h3><p>Search reports by item, category or campus location.</p><span class="step-link">Explore lost items ↗</span></a>
+    <a class="step-card" href="/found-items/new"><span class="step-number">02 / REPORT</span><div class="step-illustration report-illus">＋</div><h3>Put it on the map</h3><p>Found something? Report it so the right person can find it.</p><span class="step-link">Report an item ↗</span></a>
+    <a class="step-card" href="/found-items"><span class="step-number">03 / REUNITE</span><div class="step-illustration return-illus">↗</div><h3>Bring it back</h3><p>Submit a claim and let the finder verify ownership.</p><span class="step-link">Browse found items ↗</span></a>
+  </div>
+</section>
+<section class="section-block recent-section">
+  <div class="section-heading"><div><div class="eyebrow">FRESH FINDS</div><h2>Recently found on campus</h2></div><a class="text-link" href="/found-items">See all found items ↗</a></div>
+  <% if (!recentFound.length) { %>
+    <div class="empty-state"><div class="empty-icon">⌕</div><h3>Nothing reported just yet</h3><p>When someone reports a found item, it will show up here.</p><a class="button button-primary" href="/found-items/new">Report a found item</a></div>
+  <% } else { %>
+    <div class="item-grid">
+    <% recentFound.forEach((item, index) => { %>
+      <a class="item-card" href="/found-items/<%= item._id %>"><div class="item-card-top"><span class="item-emoji"><%= ['◉','▣','⌘','◈'][index % 4] %></span><span class="status status-available">Available</span></div><span class="item-category"><%= item.category %></span><h3><%= item.itemName %></h3><p class="item-location">⌖ <%= item.foundLocation %></p><div class="item-card-footer"><span>Reported by <%= item.reportedBy ? item.reportedBy.fullName : 'Student' %></span><span>↗</span></div></a>
+    <% }) %>
+    </div>
+  <% } %>
+</section>
+<%- include('partials/footer') %>

@@ -1,0 +1,11 @@
+<%- include('partials/header', { title }) %>
+<div class="form-layout"><div class="form-intro"><div class="eyebrow">YOUR CAMPUS IDENTITY</div><h1>First, let's get<br><span>you connected.</span></h1><p>Create a profile to report items and claim belongings. Your profile links your reports and claims to one student record.</p><div class="form-aside-note">↳ Your email must be unique in the system.</div></div>
+<section class="form-panel"><div class="form-panel-heading"><span class="form-step">PROFILE / 01</span><h2>Create student profile</h2><p>All fields are required.</p></div>
+<form action="/students" method="POST" class="app-form">
+<label>Full name<input name="fullName" required minlength="2" maxlength="100" placeholder="e.g. Aditi Sharma"></label>
+<label>College email<input name="email" type="email" required placeholder="you@college.edu"></label>
+<label>Department<input name="department" required maxlength="100" placeholder="e.g. Computer Science"></label>
+<label>Contact number<input name="contactNumber" required pattern="[0-9+() -]{7,20}" placeholder="+91 98765 43210"></label>
+<button class="button button-primary button-wide" type="submit">Create profile <span>↗</span></button>
+</form><div class="form-footnote">Already registered? <a href="/students">Choose an existing profile</a></div></section></div>
+<%- include('partials/footer') %>

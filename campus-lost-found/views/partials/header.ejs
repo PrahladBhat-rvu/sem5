@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101426">
+  <title><%= title %> · Campus Lost & Found</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/"><span class="brand-mark">LF</span><span>Campus<span class="brand-light"> / Lost & Found</span></span></a>
+  <button class="menu-toggle" type="button" aria-label="Toggle navigation" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+  <nav class="nav-links">
+    <a href="/lost-items">Lost items</a>
+    <a href="/found-items">Found items</a>
+    <a href="/students">Students</a>
+    <a class="nav-cta" href="/found-items/new">+ Report item</a>
+  </nav>
+  <div class="profile-chip">
+    <% if (currentStudentId) { %>
+      <span class="online-dot"></span><a href="/students/<%= currentStudentId %>"><%= currentStudentName %></a>
+      <form action="/session/logout" method="POST"><button class="logout-btn" title="Stop acting as this student">↗</button></form>
+    <% } else { %>
+      <a href="/students/new">Select profile →</a>
+    <% } %>
+  </div>
+</header>
+<main class="page-shell">
+  <% if (successMessages && successMessages.length) { %><div class="flash flash-success"><span>✓</span><div><% successMessages.forEach(m => { %><p><%= m %></p><% }) %></div></div><% } %>
+  <% if (errorMessages && errorMessages.length) { %><div class="flash flash-error"><span>!</span><div><% errorMessages.forEach(m => { %><p><%= m %></p><% }) %></div></div><% } %>

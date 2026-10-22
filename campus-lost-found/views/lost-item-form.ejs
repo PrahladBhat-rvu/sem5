@@ -1,0 +1,12 @@
+<%- include('partials/header', { title }) %>
+<div class="form-layout form-layout-single"><div class="form-intro"><div class="eyebrow">LOST SOMETHING?</div><h1>Let's help it<br><span>find its way back.</span></h1><p>Share the details you remember. A clear description and last-seen location make all the difference.</p><div class="form-aside-note">↳ Reporting as <strong><%= currentStudentName %></strong></div></div>
+<section class="form-panel"><div class="form-panel-heading"><span class="form-step">LOST REPORT / 01</span><h2>Item details</h2><p>Fields marked with * are required.</p></div>
+<form action="/lost-items" method="POST" class="app-form">
+<label>Item name *<input name="itemName" required maxlength="120" placeholder="e.g. Black wireless earbuds"></label>
+<label>Category *<select name="category" required><option value="">Select category</option><% categories.forEach(c => { %><option value="<%= c %>"><%= c %></option><% }) %></select></label>
+<label class="full-field">Description *<textarea name="description" required minlength="5" maxlength="1000" rows="3" placeholder="Colour, brand, stickers, identifying details..."></textarea></label>
+<label class="full-field">Last seen location *<input name="lastSeenLocation" required maxlength="200" placeholder="e.g. Library, second floor"></label>
+<label>Date lost *<input name="dateLost" type="date" max="<%= new Date().toISOString().slice(0,10) %>" required></label>
+<div class="form-actions full-field"><a class="button button-ghost" href="/lost-items">Cancel</a><button class="button button-primary" type="submit">Submit lost report ↗</button></div>
+</form></section></div>
+<%- include('partials/footer') %>

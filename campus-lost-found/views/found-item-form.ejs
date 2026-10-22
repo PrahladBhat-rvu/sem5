@@ -1,0 +1,12 @@
+<%- include('partials/header', { title }) %>
+<div class="form-layout form-layout-single"><div class="form-intro"><div class="eyebrow">FOUND SOMETHING?</div><h1>Small act.<br><span>Big relief.</span></h1><p>Log the item and where you found it. The owner can submit a claim and explain how they can identify it.</p><div class="form-aside-note">↳ Reporting as <strong><%= currentStudentName %></strong></div></div>
+<section class="form-panel"><div class="form-panel-heading"><span class="form-step">FOUND REPORT / 01</span><h2>Item details</h2><p>Fields marked with * are required.</p></div>
+<form action="/found-items" method="POST" class="app-form">
+<label>Item name *<input name="itemName" required maxlength="120" placeholder="e.g. Blue water bottle"></label>
+<label>Category *<select name="category" required><option value="">Select category</option><% categories.forEach(c => { %><option value="<%= c %>"><%= c %></option><% }) %></select></label>
+<label class="full-field">Description *<textarea name="description" required minlength="5" maxlength="1000" rows="3" placeholder="Colour, brand, markings, condition..."></textarea></label>
+<label class="full-field">Found location *<input name="foundLocation" required maxlength="200" placeholder="e.g. Near the cafeteria"></label>
+<label>Date found *<input name="dateFound" type="date" max="<%= new Date().toISOString().slice(0,10) %>" required></label>
+<div class="form-actions full-field"><a class="button button-ghost" href="/found-items">Cancel</a><button class="button button-primary" type="submit">Submit found report ↗</button></div>
+</form></section></div>
+<%- include('partials/footer') %>

@@ -1,14 +1,13 @@
 fetch('https://konghq.com')
   .then(r => r.text())
   .then(html => {
-    // Look for stylesheets
-    const cssLinks = [...html.matchAll(/<link[^>]*rel=["']stylesheet["'][^>]*href=["']([^"']+)["']/gi)].map(m => m[1]);
-    console.log('CSS links:', cssLinks);
+    // Check all script contents for keywords like webgl, three, perspective, grid, canvas, spline
+    const allMatches = html.match(/(?:webgl|three\.js|perspective|wireframe|shader|mesh|particles|grid)/gi);
+    console.log('Script keywords:', [...new Set(allMatches)]);
     
-    // Look for inline styles matching grid or background
-    const inlineStyles = [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)].map(m => m[1]).join('\n');
-    console.log('Inline style length:', inlineStyles.length);
-    const gridRules = inlineStyles.match(/[^{}]*grid[^{}]*\{[^{}]*\}/gi);
-    console.log('Grid rules:', gridRules ? gridRules.slice(0, 5) : 'none');
+    // Check svg elements
+    const svgs = html.match(/<svg[^>]*class=["'][^"']*grid[^"']*["'][^>]*>/gi);
+    console.log('SVG grid classes:', svgs);
   })
-  .catch(err => console.error(err));
+  .catch(console.error);
+

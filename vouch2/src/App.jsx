@@ -14,7 +14,7 @@ import WriteReview from "./pages/WriteReview";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
 import AuthModal from "./components/AuthModal";
-import DotsBackground from "./components/DotsBackground";
+import KongBackground from "./components/KongBackground";
 import { AuthModalProvider } from "./context/AuthModalContext";
 import { ThemeProvider } from "./context/ThemeContext";
 
@@ -24,7 +24,7 @@ function App() {
       <ThemeProvider>
         <AuthModalProvider>
           <ScrollToTop />
-          <DotsBackground />
+          <KongBackground />
           <AuthModal />
           <Routes>
             <Route path="/" element={<Home />} />

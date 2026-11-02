@@ -8296,3 +8296,524 @@ select:focus-visible {
   background: #ff684d !important;
   border-color: #ff684d !important;
 }
+
+
+/* =========================================================
+   KONG WEBSITE HIGH-TECH GRID BACKGROUND
+   ========================================================= */
+
+.kong-background-layer {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  --mouse-x: 50vw;
+  --mouse-y: 30vh;
+  --spotlight-opacity: 0;
+}
+
+/* Light Mode: Kong Square Grid Texture */
+.kong-background-layer.light {
+  background-color: #f5f4ef;
+  --kong-grid-img: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAMAAADz0U65AAAABlBMVEWBg3////+1LyIoAAAAAnRSTlP/AOW3MEoAAAASSURBVHjaYmBghAAYTSYDIMAACQEAQBWgMb8AAAAASUVORK5CYII=");
+  --kong-glow: rgba(255, 84, 54, 0.08);
+  --kong-top-glow: rgba(255, 84, 54, 0.05);
+}
+
+/* Dark Mode: Kong Dark Square Grid Texture */
+.kong-background-layer.dark {
+  background-color: #0d0d10;
+  --kong-grid-img: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAH0lEQVQY02NYv3VF2v///xmANFbMAJLEqwCXxJBSAADaLYY6mo6WWwAAAABJRU5ErkJggg==");
+  --kong-glow: rgba(255, 84, 54, 0.16);
+  --kong-top-glow: rgba(255, 84, 54, 0.14);
+}
+
+.kong-grid-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: var(--kong-grid-img);
+  background-repeat: repeat;
+  background-position: 0 1px;
+}
+
+.kong-top-ambient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 550px;
+  background: radial-gradient(
+    1000px 400px at 50% -120px,
+    var(--kong-top-glow),
+    transparent 75%
+  );
+}
+
+.kong-cursor-spotlight {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    650px circle at var(--mouse-x) var(--mouse-y),
+    var(--kong-glow),
+    transparent 65%
+  );
+  opacity: var(--spotlight-opacity);
+  transition: opacity 0.3s ease-out;
+}
+
+
+/* =========================================================
+   KONG WEBSITE HIGH-TECH GRID BACKGROUND
+   ========================================================= */
+
+.kong-background-layer {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  --mouse-x: 50vw;
+  --mouse-y: 30vh;
+  --spotlight-opacity: 0;
+}
+
+/* Light Mode: Kong Square Grid Texture */
+.kong-background-layer.light {
+  background-color: #f5f4ef;
+  --kong-grid-img: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAMAAADz0U65AAAABlBMVEWBg3////+1LyIoAAAAAnRSTlP/AOW3MEoAAAASSURBVHjaYmBghAAYTSYDIMAACQEAQBWgMb8AAAAASUVORK5CYII=");
+  --kong-glow: rgba(255, 84, 54, 0.08);
+  --kong-top-glow: rgba(255, 84, 54, 0.05);
+}
+
+/* Dark Mode: Kong Dark Square Grid Texture */
+.kong-background-layer.dark {
+  background-color: #0d0d10;
+  --kong-grid-img: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAH0lEQVQY02NYv3VF2v///xmANFbMAJLEqwCXxJBSAADaLYY6mo6WWwAAAABJRU5ErkJggg==");
+  --kong-glow: rgba(255, 84, 54, 0.16);
+  --kong-top-glow: rgba(255, 84, 54, 0.14);
+}
+
+.kong-grid-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: var(--kong-grid-img);
+  background-repeat: repeat;
+  background-position: 0 1px;
+}
+
+.kong-top-ambient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 550px;
+  background: radial-gradient(
+    1000px 400px at 50% -120px,
+    var(--kong-top-glow),
+    transparent 75%
+  );
+}
+
+.kong-cursor-spotlight {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    650px circle at var(--mouse-x) var(--mouse-y),
+    var(--kong-glow),
+    transparent 65%
+  );
+  opacity: var(--spotlight-opacity);
+  transition: opacity 0.3s ease-out;
+}
+
+
+/* ============================================================
+   STREAMING PLATFORM 16:9 MOVIE SHELVES (Apple TV / Netflix layout)
+   Matching Reference: "More from Marc Webb", "Starring Andrew Garfield"
+   ============================================================ */
+
+.home-shelves-wrap,
+.product-shelves-container {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+  width: 100%;
+  margin: 36px 0 54px 0;
+}
+
+.movie-shelf-section {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* SHELF HEADER */
+.movie-shelf-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.movie-shelf-title-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.movie-shelf-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f4f4f5;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.movie-shelf-explore-link {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #38bdf8;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  opacity: 0.92;
+  transition: opacity 0.16s ease, transform 0.16s ease, color 0.16s ease;
+}
+
+.movie-shelf-explore-link:hover {
+  opacity: 1;
+  color: #0ea5e9;
+  transform: translateX(2px);
+}
+
+/* HEADER CONTROLS (DASHES + CHEVRONS) */
+.movie-shelf-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.movie-shelf-dashes {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 16px;
+}
+
+.shelf-dash {
+  height: 2.5px;
+  width: 13px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.shelf-dash:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.shelf-dash.active {
+  width: 22px;
+  background: #ffffff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.45);
+}
+
+.movie-shelf-arrows {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.shelf-nav-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #f4f4f5;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: all 0.18s ease;
+}
+
+.shelf-nav-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: scale(1.06);
+}
+
+.shelf-nav-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* CAROUSEL TRACK */
+.movie-shelf-track-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.movie-shelf-track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 6px 2px 14px 2px;
+  scroll-behavior: smooth;
+}
+
+.movie-shelf-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* 16:9 LANDSCAPE CARD */
+.movie-shelf-card {
+  flex: 0 0 calc(20% - 11.2px);
+  min-width: 220px;
+  max-width: 320px;
+  aspect-ratio: 16 / 9;
+  text-decoration: none;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #15181f;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  scroll-snap-align: start;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.25s ease;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  user-select: none;
+}
+
+.movie-shelf-card:hover,
+.movie-shelf-card:focus-visible {
+  transform: scale(1.04) translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.26);
+  border-color: rgba(255, 255, 255, 0.32);
+  z-index: 5;
+}
+
+.shelf-card-media {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.shelf-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.movie-shelf-card:hover .shelf-card-media img {
+  transform: scale(1.04);
+}
+
+.shelf-card-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 35%,
+    rgba(10, 11, 16, 0.45) 65%,
+    rgba(10, 11, 16, 0.94) 100%
+  );
+  pointer-events: none;
+}
+
+.shelf-card-chip {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.68);
+  backdrop-filter: blur(8px);
+  color: #f4f4f5;
+  padding: 2.5px 6.5px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  z-index: 2;
+}
+
+.shelf-card-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 2;
+}
+
+.shelf-card-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+}
+
+.shelf-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.78);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+}
+
+.shelf-meta-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: #fbbf24;
+}
+
+.shelf-meta-genre {
+  opacity: 0.85;
+}
+
+/* RIGHT EDGE FLOATING ADVANCE CHEVRON */
+.shelf-edge-peek-btn {
+  position: absolute;
+  right: 0;
+  top: 6px;
+  bottom: 14px;
+  width: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(10, 12, 18, 0.82) 55%,
+    rgba(10, 12, 18, 0.98) 100%
+  );
+  border: none;
+  color: #ffffff;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 4;
+  opacity: 0.85;
+  transition: opacity 0.2s, background 0.2s;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.shelf-edge-peek-btn:hover {
+  opacity: 1;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(10, 12, 18, 0.92) 50%,
+    rgba(10, 12, 18, 1) 100%
+  );
+}
+
+/* RESPONSIVE BREAKPOINTS FOR LANDSCAPE SHELVES */
+@media (max-width: 1200px) {
+  .movie-shelf-card {
+    flex: 0 0 calc(25% - 10.5px);
+  }
+}
+
+@media (max-width: 900px) {
+  .movie-shelf-card {
+    flex: 0 0 calc(33.333% - 9.5px);
+  }
+}
+
+@media (max-width: 640px) {
+  .movie-shelf-card {
+    flex: 0 0 76%;
+    min-width: 220px;
+  }
+  .movie-shelf-title {
+    font-size: 1.12rem;
+  }
+  .shelf-edge-peek-btn {
+    display: none;
+  }
+}
+
+/* LIGHT THEME ADAPTATIONS */
+[data-theme="light"] .movie-shelf-title {
+  color: #18181b;
+}
+
+[data-theme="light"] .movie-shelf-explore-link {
+  color: #0284c7;
+}
+
+[data-theme="light"] .shelf-dash {
+  background: rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="light"] .shelf-dash.active {
+  background: #18181b;
+  box-shadow: none;
+}
+
+[data-theme="light"] .shelf-nav-btn {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.12);
+  color: #18181b;
+}
+
+[data-theme="light"] .shelf-nav-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.24);
+}
+
+[data-theme="light"] .movie-shelf-card {
+  background: #f4f4f5;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .shelf-edge-peek-btn {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(250, 249, 246, 0.85) 55%,
+    rgba(250, 249, 246, 0.98) 100%
+  );
+  color: #18181b;
+}

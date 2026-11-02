@@ -2,6 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
+import MovieShelf from "../components/MovieShelf";
+import { CURATED_SHELVES } from "../data/shelfData";
 import { useAuthModal } from "../context/AuthModalContext";
 
 const movies = [
@@ -98,42 +100,40 @@ function Home() {
           </div>
         </section>
 
-        {/* TRENDING */}
-        <section className="section">
-          <div className="section-header">
-            <div>
-              <p className="eyebrow">TRENDING NOW</p>
-              <h2>What people are talking about</h2>
-            </div>
+        {/* STREAMING-PLATFORM CURATED ROWS (Matching reference layout) */}
+        <div className="home-shelves-wrap">
+          <MovieShelf
+            shelfId="shelf-marc-webb"
+            title="More from Marc Webb"
+            exploreLink="/search?q=Marc+Webb"
+            exploreText="Explore All ›"
+            movies={CURATED_SHELVES["Marc Webb"]}
+          />
 
-            <Link to="/search" className="view-all">
-              View all →
-            </Link>
-          </div>
+          <MovieShelf
+            shelfId="shelf-andrew-garfield"
+            title="Starring Andrew Garfield"
+            exploreLink="/search?q=Andrew+Garfield"
+            exploreText="Explore All ›"
+            movies={CURATED_SHELVES["Andrew Garfield"]}
+          />
 
-          <div className="movie-grid">
-            {movies.map((movie) => (
-              <Link
-                to={`/product/${movie.id}`}
-                className="movie-card"
-                key={movie.id}
-              >
-                <div className="movie-image">
-                  <img src={movie.image} alt={movie.title} />
-                </div>
+          <MovieShelf
+            shelfId="shelf-christopher-nolan"
+            title="Auteur Spotlight: Christopher Nolan"
+            exploreLink="/search?q=Christopher+Nolan"
+            exploreText="Explore All ›"
+            movies={CURATED_SHELVES["Christopher Nolan"]}
+          />
 
-                <div className="movie-info">
-                  <h3>{movie.title}</h3>
-
-                  <div className="movie-meta">
-                    <span>{movie.year}</span>
-                    <span>★ {movie.rating}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
+          <MovieShelf
+            shelfId="shelf-trending-masterpieces"
+            title="Trending Masterpieces"
+            exploreLink="/search"
+            exploreText="Explore All ›"
+            movies={CURATED_SHELVES["Trending Masterpieces"]}
+          />
+        </div>
 
         {/* SOURCES */}
         <section className="sources">

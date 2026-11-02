@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import MovieShelf from "../components/MovieShelf";
 import { getMovieDetails, getTMDBImageUrl, FALLBACK_TRENDING } from "../api/tmdb";
+import { getShelvesForMovie } from "../data/shelfData";
 
 const INITIAL_REVIEWS = [
   {
@@ -358,6 +360,7 @@ function Product() {
   const writers = getWriters(movie);
   const cast = getCastList(movie);
   const scores = getExternalScores(movie, rawRating);
+  const dynamicShelves = getShelvesForMovie(movie);
 
   return (
     <div className="site">
@@ -636,31 +639,18 @@ function Product() {
           </div>
         </section>
 
-        {/* MORE TITLES YOU MIGHT LIKE */}
-        <section className="product-recommendations">
-          <div className="product-section-heading">
-            <p className="eyebrow">EXPLORE NEXT</p>
-            <h2>More critically acclaimed titles</h2>
-          </div>
-
-          <div className="movie-grid">
-            {FALLBACK_TRENDING.slice(0, 4).map((rec) => (
-              <Link to={`/product/${rec.id}`} className="movie-card" key={rec.id}>
-                <div className="movie-image">
-                  <img src={rec.image} alt={rec.title} loading="lazy" />
-                  <span className="card-badge">★ {rec.rating}</span>
-                </div>
-                <div className="movie-info">
-                  <p className="card-type">{rec.genres?.[0] || "RECOMMENDED"}</p>
-                  <h3>{rec.title}</h3>
-                  <div className="movie-meta">
-                    <span>{rec.year}</span>
-                    <span>Consensus: ★ {rec.rating}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+        {/* STREAMING-STYLE 16:9 MOVIE SHELVES (Matching reference image) */}
+        <section className="product-shelves-container">
+          {dynamicShelves.map((shelf) => (
+            <MovieShelf
+              key={shelf.id}
+              shelfId={shelf.id}
+              title={shelf.title}
+              exploreLink={shelf.exploreLink}
+              exploreText="Explore All ›"
+              movies={shelf.movies}
+            />
+          ))}
         </section>
 
         {/* WRITE A REVIEW MODAL */}

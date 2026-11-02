@@ -649,7 +649,7 @@ app.get("/api/movie/:id", async (req, res) => {
       const response = await tmdbRequest(
         `/movie/${encodeURIComponent(
           effectiveId
-        )}?append_to_response=credits&language=en-US`
+        )}?append_to_response=credits,videos,recommendations&language=en-US`
       );
 
       if (!response.ok) {
@@ -698,7 +698,7 @@ app.get("/api/movie/:id", async (req, res) => {
           const searchData = await searchRes.json();
           if (Array.isArray(searchData.results) && searchData.results.length > 0) {
             const topMatch = searchData.results[0];
-            const detailsRes = await tmdbRequest(`/movie/${topMatch.id}?append_to_response=credits&language=en-US`);
+            const detailsRes = await tmdbRequest(`/movie/${topMatch.id}?append_to_response=credits,videos,recommendations&language=en-US`);
             if (detailsRes.ok) {
               const details = await detailsRes.json();
               return res.json({

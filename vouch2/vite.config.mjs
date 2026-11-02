@@ -1,11 +1,14 @@
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { cloudflare } from "@cloudflare/vite-plugin";
 
+const isVercel = process.env.VERCEL === "1";
+
 export default defineConfig(({ command }) => ({
   plugins: [
     react(),
-    ...(command === "build" ? [cloudflare()] : []),
+    ...(command === "build" && !isVercel ? [cloudflare()] : []),
   ],
 
   server: {

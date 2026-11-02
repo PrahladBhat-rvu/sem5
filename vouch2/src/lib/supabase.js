@@ -1,7 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://kpvaxobjypqtyqmshaxq.supabase.co";
-const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || "placeholder-key";
+const supabaseUrl =
+  (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_SUPABASE_URL) ||
+  "https://kpvaxobjypqtyqmshaxq.supabase.co";
+const supabaseKey =
+  (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY) ||
+  "placeholder-key";
 
 const rawClient = createClient(supabaseUrl, supabaseKey);
 
@@ -21,6 +25,7 @@ function notifyAuthListeners(event, session) {
 
 export function getLocalDemoSession() {
   try {
+    if (typeof window === "undefined" || !window.localStorage) return null;
     const raw = localStorage.getItem(DEMO_STORAGE_KEY);
     return raw ? JSON.parse(raw) : null;
   } catch {
@@ -42,13 +47,21 @@ export function setLocalDemoSession(userMeta = {}) {
       },
     },
   };
-  localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(session));
+  try {
+    if (typeof window !== "undefined" && window.localStorage) {
+      localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(session));
+    }
+  } catch {}
   notifyAuthListeners("SIGNED_IN", session);
   return session;
 }
 
 export function clearLocalDemoSession() {
-  localStorage.removeItem(DEMO_STORAGE_KEY);
+  try {
+    if (typeof window !== "undefined" && window.localStorage) {
+      localStorage.removeItem(DEMO_STORAGE_KEY);
+    }
+  } catch {}
   notifyAuthListeners("SIGNED_OUT", null);
 }
 

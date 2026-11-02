@@ -59,8 +59,6 @@ function Categories() {
 
       <main className="categories-page">
         <section className="categories-hero">
-          <p className="eyebrow">EXPLORE VOUCH</p>
-
           <h1>
             Find your
             <br />

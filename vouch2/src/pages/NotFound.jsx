@@ -9,7 +9,6 @@ function NotFound() {
 
       <main className="not-found-page">
         <div className="not-found-content">
-          <p className="eyebrow">ERROR 404</p>
           <h1>
             Lost in the
             <br />

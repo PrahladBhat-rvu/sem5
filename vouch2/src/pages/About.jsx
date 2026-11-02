@@ -8,7 +8,6 @@ function About() {
       <main className="about-page">
         {/* HERO */}
         <section className="about-hero">
-          <p className="eyebrow">OUR MISSION</p>
           <h1>
             The internet's opinion.
             <br />
@@ -86,7 +85,6 @@ function About() {
         {/* HOW WE DO IT - 3 PILLARS */}
         <section className="about-pillars">
           <div className="pillars-header">
-            <p className="eyebrow">THE ARCHITECTURE</p>
             <h2>Built on three foundational principles.</h2>
           </div>
           <div className="pillars-grid">
@@ -120,7 +118,6 @@ function About() {
         {/* TECH STACK / PROJECT CREDITS */}
         <section className="about-tech-stack">
           <div className="tech-stack-inner">
-            <p className="eyebrow">ENGINEERING & CRAFT</p>
             <h2>The Technology Behind Vouch</h2>
             <p className="tech-lead">
               Crafted as a full-stack modern web application with high performance,
@@ -159,7 +156,6 @@ function About() {
         {/* FAQ ACCORDION / LIST */}
         <section className="about-faq">
           <div className="faq-header">
-            <p className="eyebrow">QUESTIONS & ANSWERS</p>
             <h2>Frequently Asked Questions</h2>
           </div>
           <div className="faq-list">
@@ -195,7 +191,6 @@ function About() {
 
         {/* BOTTOM CTA */}
         <section className="about-cta">
-          <p className="eyebrow">GET STARTED TODAY</p>
           <h2>Ready to stop guessing and start watching?</h2>
           <div className="about-cta-buttons">
             <Link to="/discover" className="btn-primary">

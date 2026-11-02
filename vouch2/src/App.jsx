@@ -32,6 +32,9 @@ function App() {
             <Route path="/new-releases" element={<NewReleases />} />
             <Route path="/about" element={<About />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/movie/:idOrSlug" element={<Product />} />
+            <Route path="/tvshow/:idOrSlug" element={<Product />} />
+            <Route path="/tv/:idOrSlug" element={<Product />} />
             <Route path="/product/:id" element={<Product />} />
             <Route path="/login" element={<Navigate to="/?auth=login" replace />} />
             <Route path="/signup" element={<Navigate to="/?auth=signup" replace />} />

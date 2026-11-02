@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
+import { getTitleUrl } from "../utils/slug";
 
 /**
  * MovieShelf: Apple TV / Netflix style horizontal landscape carousel.
@@ -145,7 +146,7 @@ export default function MovieShelf({
 
             return (
               <Link
-                to={`/product/${m.id}`}
+                to={getTitleUrl(m)}
                 key={`${shelfId}-${m.id}-${index}`}
                 className="movie-shelf-card"
                 title={`${m.title} (${m.year || "Movie"})`}

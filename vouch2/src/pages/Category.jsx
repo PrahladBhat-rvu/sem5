@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
+import { getTitleUrl } from "../utils/slug";
 import { getMoviesByCategory } from "../api/tmdb";
 
 function Category() {
@@ -51,10 +52,6 @@ function Category() {
       <main className="category-page">
         {/* CATEGORY HERO */}
         <section className="category-hero">
-          <p className="eyebrow">
-            {category?.toUpperCase()} / DISCOVER
-          </p>
-
           <h1>
             {formattedCategory}
             <br />
@@ -73,7 +70,6 @@ function Category() {
         <section className="category-content">
           <div className="category-header">
             <div>
-              <p className="eyebrow">TRENDING NOW</p>
               <h2>Popular {formattedCategory}</h2>
             </div>
 
@@ -124,7 +120,7 @@ function Category() {
               {movies.map((movie) => (
                 <Link
                   key={movie.id}
-                  to={`/product/${movie.id}`}
+                  to={getTitleUrl(movie)}
                   className="category-movie-card"
                 >
                   <div className="category-movie-image">

@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
+import { getTitleUrl } from "../utils/slug";
 import {
   searchMovies,
   getTMDBImageUrl,
@@ -67,6 +68,19 @@ function Search() {
   const currentQuery = searchParams.get("q") || "";
 
   const [inputVal, setInputVal] = useState(currentQuery);
+
+  // Persist active search query to sessionStorage so Product back button remembers it
+  useEffect(() => {
+    if (currentQuery) {
+      try {
+        sessionStorage.setItem(
+          "vouch_last_search_url",
+          `/search?q=${encodeURIComponent(currentQuery)}`
+        );
+        sessionStorage.setItem("vouch_last_search_query", currentQuery);
+      } catch {}
+    }
+  }, [currentQuery]);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -176,7 +190,6 @@ function Search() {
         {/* HERO SEARCH HEADER */}
         <section className="search-hero">
           <div className="search-hero-inner">
-            <p className="eyebrow">GLOBAL CONSENSUS SEARCH</p>
             <h1>
               Find something
               <br />
@@ -344,7 +357,13 @@ function Search() {
 
                   return (
                     <Link
-                      to={`/product/${movieId}`}
+                      to={getTitleUrl(movie)}
+                      state={{
+                        fromSearch: currentQuery
+                          ? `/search?q=${encodeURIComponent(currentQuery)}`
+                          : "/search",
+                        query: currentQuery || "",
+                      }}
                       className="movie-card search-result-card"
                       key={`${movie.source || "movie"}-${movieId}`}
                     >
@@ -386,14 +405,13 @@ function Search() {
         {!currentQuery && !loading && (
           <section className="search-initial-view">
             <div className="initial-header">
-              <p className="eyebrow">COMMUNITY RECOMMENDED</p>
               <h2>Or start with high-consensus favorites</h2>
             </div>
 
             <div className="movie-grid">
               {FALLBACK_TRENDING.slice(0, 8).map((movie) => (
                 <Link
-                  to={`/product/${movie.id}`}
+                  to={getTitleUrl(movie)}
                   className="movie-card search-result-card"
                   key={movie.id}
                 >

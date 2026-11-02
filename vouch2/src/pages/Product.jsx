@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import MovieShelf from "../components/MovieShelf";
-import { getMovieDetails, getTMDBImageUrl, FALLBACK_TRENDING } from "../api/tmdb";
-import { getShelvesForMovie } from "../data/shelfData";
+import {
+  getMovieDetails,
+  getTMDBImageUrl,
+  searchMovies,
+  ALL_CURATED_MOVIES,
+  FALLBACK_TRENDING,
+} from "../api/tmdb";
+import { getShelvesForMovie, CURATED_SHELVES } from "../data/shelfData";
+import { slugify, getTitleUrl } from "../utils/slug";
 
 const INITIAL_REVIEWS = [
   {
@@ -201,8 +208,87 @@ function getExternalScores(movie, rawRating) {
   };
 }
 
+async function resolveMovieIdentifier(target) {
+  if (!target) return null;
+  const str = String(target).trim();
+
+  // 1. Direct ID: numeric TMDB ID or IMDb ID (tt1234567)
+  if (/^\d+$/.test(str) || /^tt\d+$/i.test(str)) {
+    return str;
+  }
+
+  // 2. Trailing ID in slug: e.g. "the-dark-knight-155" or "the-office-2316"
+  const trailingMatch = str.match(/-(\d+|tt\d+)$/i);
+  if (trailingMatch) {
+    return trailingMatch[1];
+  }
+
+  const cleanSlug = slugify(str);
+
+  // 3. Match against curated shelves
+  for (const list of Object.values(CURATED_SHELVES)) {
+    const found = list.find((m) => slugify(m.title) === cleanSlug);
+    if (found) return found.id;
+  }
+
+  // 4. Match against ALL_CURATED_MOVIES
+  const curatedMatch = ALL_CURATED_MOVIES.find((m) => slugify(m.title) === cleanSlug);
+  if (curatedMatch) return curatedMatch.id;
+
+  // 5. Query TMDB/OMDb search API with the title derived from the slug
+  try {
+    const searchWords = str.replace(/-/g, " ");
+    const results = await searchMovies(searchWords);
+    if (Array.isArray(results) && results.length > 0) {
+      const exact = results.find(
+        (r) => slugify(r.title || r.name) === cleanSlug
+      );
+      return exact ? (exact.id || exact.imdbID) : (results[0].id || results[0].imdbID);
+    }
+  } catch (err) {
+    console.warn("Search resolution fallback:", err);
+  }
+
+  return str;
+}
+
 function Product() {
-  const { id } = useParams();
+  const { id, idOrSlug } = useParams();
+  const rawIdentifier = idOrSlug || id;
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Retrieve back-to-search URL & query (prioritize router state, fall back to sessionStorage)
+  const previousSearch = (() => {
+    if (location.state?.fromSearch) {
+      return {
+        url: location.state.fromSearch,
+        query: location.state.query || "",
+      };
+    }
+    try {
+      const storedUrl = sessionStorage.getItem("vouch_last_search_url");
+      const storedQuery = sessionStorage.getItem("vouch_last_search_query");
+      if (storedUrl) {
+        return {
+          url: storedUrl,
+          query: storedQuery || "",
+        };
+      }
+    } catch {}
+    return null;
+  })();
+
+  const handleBackToSearch = (e) => {
+    if (e) e.preventDefault();
+    if (previousSearch?.url) {
+      navigate(previousSearch.url);
+    } else if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/search");
+    }
+  };
 
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -227,7 +313,10 @@ function Product() {
       try {
         setLoading(true);
         setError("");
-        const data = await getMovieDetails(id);
+
+        // Resolve slug / name / ID to actionable movie identifier
+        const resolvedId = await resolveMovieIdentifier(rawIdentifier);
+        const data = await getMovieDetails(resolvedId || rawIdentifier);
 
         if (cancelled) return;
 
@@ -243,7 +332,7 @@ function Product() {
                 ...data,
                 ...detailed,
                 source: "tmdb",
-                imdbID: data.imdbID || id,
+                imdbID: data.imdbID || resolvedId,
               };
             }
           } catch (e) {
@@ -251,7 +340,15 @@ function Product() {
           }
         }
 
-        if (!cancelled) setMovie(finalMovie);
+        if (!cancelled) {
+          setMovie(finalMovie);
+
+          // Canonical URL upgrade: If visited via legacy /product/:id, upgrade address bar to /movie/:slug or /tvshow/:slug
+          if (typeof window !== "undefined" && window.location.pathname.startsWith("/product/")) {
+            const canonicalUrl = getTitleUrl(finalMovie);
+            window.history.replaceState(null, "", canonicalUrl);
+          }
+        }
       } catch (err) {
         console.error("Movie details error:", err);
         if (!cancelled) setError("Could not load details for this title.");
@@ -339,9 +436,14 @@ function Product() {
           <div className="search-state">
             <h3>Movie not found</h3>
             <p>{error || "We couldn't locate this title in our records."}</p>
-            <Link to="/search" className="btn-primary" style={{ marginTop: "16px", display: "inline-block" }}>
-              ← Back to Search
-            </Link>
+            <button
+              type="button"
+              onClick={handleBackToSearch}
+              className="btn-primary"
+              style={{ marginTop: "16px", display: "inline-block", cursor: "pointer" }}
+            >
+              {previousSearch?.query ? `← Back to "${previousSearch.query}"` : "← Back to Search"}
+            </button>
           </div>
         </main>
       </div>
@@ -376,11 +478,21 @@ function Product() {
         )}
 
         {/* BREADCRUMB & BACK LINK */}
-        <div className="product-breadcrumb">
-          <Link to="/search">← Back to Search</Link>
-          <span className="breadcrumb-sep">/</span>
-          <span>{title}</span>
-        </div>
+        <nav className="product-breadcrumb-nav" aria-label="Breadcrumb navigation">
+          <button
+            type="button"
+            className="breadcrumb-back-pill"
+            onClick={handleBackToSearch}
+            title={previousSearch?.query ? `Back to "${previousSearch.query}" results` : "Back to search results"}
+          >
+            <span className="back-pill-arrow">‹</span>
+            <span className="back-pill-text">
+              {previousSearch?.query ? `Back to "${previousSearch.query}"` : "Back to Search"}
+            </span>
+          </button>
+          <span className="breadcrumb-nav-divider">/</span>
+          <span className="breadcrumb-nav-title" title={title}>{title}</span>
+        </nav>
 
         {/* HERO SECTION */}
         <section className="product-hero">
@@ -455,7 +567,6 @@ function Product() {
         {/* CONSENSUS COMPARISON SECTION (THE USP OF VOUCH) */}
         <section className="external-reviews">
           <div className="product-section-heading">
-            <p className="eyebrow">THE AGGREGATE CONSENSUS</p>
             <h2>What the world thinks.</h2>
             <p className="section-subtext">
               Unified scores across critics, major review databases, and genuine community members.
@@ -509,7 +620,6 @@ function Product() {
         {cast.length > 0 && (
           <section className="product-cast-section">
             <div className="product-section-heading">
-              <p className="eyebrow">HEADLINERS & CREW</p>
               <h2>Top Billed Cast</h2>
             </div>
 
@@ -537,7 +647,6 @@ function Product() {
         <section className="vouch-reviews">
           <div className="reviews-heading">
             <div>
-              <p className="eyebrow">COMMUNITY OPINIONS</p>
               <h2>What people on Vouch say.</h2>
             </div>
 

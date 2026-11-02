@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import { supabase } from "../lib/supabase";
 import { FALLBACK_TRENDING } from "../api/tmdb";
 import { useAuthModal } from "../context/AuthModalContext";
+import { getTitleUrl } from "../utils/slug";
 
 function Profile() {
   const navigate = useNavigate();
@@ -177,7 +178,7 @@ function Profile() {
               <div className="movie-grid">
                 {watchlist.map((movie) => (
                   <div key={movie.id} className="movie-card watchlist-card">
-                    <Link to={`/product/${movie.id}`}>
+                    <Link to={getTitleUrl(movie)}>
                       <div className="movie-image">
                         <img src={movie.image} alt={movie.title} loading="lazy" />
                         <span className="card-badge">★ {movie.rating}</span>
@@ -226,7 +227,7 @@ function Profile() {
                   <article key={rev.id} className="user-review-card">
                     <div className="user-review-header">
                       <div>
-                        <Link to={`/product/${rev.movieId}`} className="review-movie-link">
+                        <Link to={getTitleUrl({ id: rev.movieId, title: rev.movieTitle })} className="review-movie-link">
                           {rev.movieTitle} →
                         </Link>
                         <div className="user-review-stars">

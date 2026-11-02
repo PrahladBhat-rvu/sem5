@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { getTitleUrl } from "../utils/slug";
 import { getNewReleases, getTrendingMovies, getTMDBImageUrl } from "../api/tmdb";
 
 function NewReleases() {
@@ -45,7 +46,6 @@ function NewReleases() {
       <main className="new-releases-page">
         {/* HEADER */}
         <section className="releases-hero">
-          <p className="eyebrow">FRESH DROPS & PREMIERES</p>
           <h1>
             What's new.
             <br />
@@ -79,9 +79,6 @@ function NewReleases() {
         <section className="releases-content">
           <div className="releases-header-meta">
             <div>
-              <p className="eyebrow">
-                {activeTab === "theatres" ? "NOW PLAYING" : "STREAMING & THEATRICAL"}
-              </p>
               <h2>
                 {activeTab === "theatres"
                   ? "Box Office & Theatrical Premieres"
@@ -166,7 +163,7 @@ function NewReleases() {
                         </div>
 
                         <Link
-                          to={`/product/${movie.id}`}
+                          to={getTitleUrl(movie)}
                           className="release-action-link"
                         >
                           Check Consensus →
@@ -182,7 +179,6 @@ function NewReleases() {
 
         {/* BOTTOM NEWSLETTER / ALERT CTA */}
         <section className="releases-cta">
-          <p className="eyebrow">NEVER MISS A PREMIERE</p>
           <h2>Want alerts when reviews drop for upcoming films?</h2>
           <p>Create an account to build your personal watchlist and get genuine consensus notifications.</p>
           <div className="releases-cta-actions">

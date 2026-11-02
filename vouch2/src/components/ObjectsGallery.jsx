@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getTitleUrl } from "../utils/slug";
 import { getTMDBImageUrl } from "../api/tmdb";
 
 const GALLERY_OBJECTS = [
@@ -225,7 +226,6 @@ function ObjectsGallery() {
       {/* SECTION HEADER */}
       <div className="objects-gallery-header">
         <div>
-          <p className="eyebrow">GALLERY: OBJECTS</p>
           <h2>The Vouch Film Vault</h2>
         </div>
         <p className="objects-header-sub">
@@ -370,7 +370,7 @@ function ObjectsGallery() {
                   </div>
 
                   <Link
-                    to={`/product/${selected.id}`}
+                    to={getTitleUrl(selected)}
                     className="spec-inspect-btn"
                   >
                     Inspect Full Reviews & Vouches →

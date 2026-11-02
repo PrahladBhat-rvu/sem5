@@ -481,6 +481,10 @@ app.get("/api/movie/:id", async (req, res) => {
     });
   }
 
+  // Extract trailing numeric/IMDb ID from slug (e.g. "the-dark-knight-155" -> "155")
+  const trailingMatch = movieId.match(/-(\d+|tt\d+)$/i);
+  const effectiveId = trailingMatch ? trailingMatch[1] : movieId;
+
   // ==========================================================
   // OMDb IMDb ID
   // ==========================================================
@@ -493,7 +497,7 @@ app.get("/api/movie/:id", async (req, res) => {
   //
   // ==========================================================
 
-  const isIMDbId = /^tt\d+$/i.test(movieId);
+  const isIMDbId = /^tt\d+$/i.test(effectiveId);
 
   if (isIMDbId) {
     // --------------------------------------------------------
@@ -502,10 +506,10 @@ app.get("/api/movie/:id", async (req, res) => {
 
     if (hasOMDb()) {
       try {
-        console.log(`OMDb movie request: ${movieId}`);
+        console.log(`OMDb movie request: ${effectiveId}`);
 
         const response = await omdbRequest({
-          i: movieId,
+          i: effectiveId,
           plot: "full",
         });
 
@@ -631,7 +635,7 @@ app.get("/api/movie/:id", async (req, res) => {
   //
   // ==========================================================
 
-  if (/^\d+$/.test(movieId)) {
+  if (/^\d+$/.test(effectiveId)) {
     if (!hasTMDB()) {
       return res.status(500).json({
         error:
@@ -640,11 +644,11 @@ app.get("/api/movie/:id", async (req, res) => {
     }
 
     try {
-      console.log(`TMDB movie request: ${movieId}`);
+      console.log(`TMDB movie request: ${effectiveId}`);
 
       const response = await tmdbRequest(
         `/movie/${encodeURIComponent(
-          movieId
+          effectiveId
         )}?append_to_response=credits&language=en-US`
       );
 
@@ -670,7 +674,7 @@ app.get("/api/movie/:id", async (req, res) => {
       });
     } catch (error) {
       console.error(
-        `TMDB MOVIE ERROR (${movieId}):`,
+        `TMDB MOVIE ERROR (${effectiveId}):`,
         error.message
       );
 
@@ -678,6 +682,47 @@ app.get("/api/movie/:id", async (req, res) => {
         error: "Failed to get movie details.",
         details: error.message,
       });
+    }
+  }
+
+  // ==========================================================
+  // Slug / Title Search Fallback (e.g. /api/movie/the-dark-knight)
+  // ==========================================================
+  if (hasTMDB() || hasOMDb()) {
+    try {
+      const searchTitle = effectiveId.replace(/-/g, " ");
+      console.log(`Searching title fallback for slug: "${searchTitle}"`);
+      if (hasTMDB()) {
+        const searchRes = await tmdbRequest(`/search/movie?query=${encodeURIComponent(searchTitle)}&language=en-US`);
+        if (searchRes.ok) {
+          const searchData = await searchRes.json();
+          if (Array.isArray(searchData.results) && searchData.results.length > 0) {
+            const topMatch = searchData.results[0];
+            const detailsRes = await tmdbRequest(`/movie/${topMatch.id}?append_to_response=credits&language=en-US`);
+            if (detailsRes.ok) {
+              const details = await detailsRes.json();
+              return res.json({
+                ...details,
+                source: "tmdb",
+                tmdbID: details.id,
+              });
+            }
+          }
+        }
+      }
+      if (hasOMDb()) {
+        const omdbRes = await omdbRequest({ t: searchTitle, plot: "full" });
+        const omdbData = await omdbRes.json();
+        if (omdbData.Response === "True") {
+          return res.json({
+            ...omdbData,
+            source: "omdb",
+            id: omdbData.imdbID,
+          });
+        }
+      }
+    } catch (slugErr) {
+      console.error("Slug fallback error:", slugErr);
     }
   }
 
@@ -839,16 +884,26 @@ app.get("/", (req, res) => {
 // START SERVER
 // ============================================================
 
-app.listen(PORT, () => {
-  console.log(
-    `Vouch API server running on http://localhost:${PORT}`
-  );
+// ============================================================
+// START SERVER
+// ============================================================
 
-  console.log(
-    `OMDb: ${hasOMDb() ? "configured" : "NOT configured"}`
-  );
+// Export the app for Vercel
+module.exports = app;
 
-  console.log(
-    `TMDB: ${hasTMDB() ? "configured" : "NOT configured"}`
-  );
-});
+// Start normally during local development
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(
+      `Vouch API server running on http://localhost:${PORT}`
+    );
+
+    console.log(
+      `OMDb: ${hasOMDb() ? "configured" : "NOT configured"}`
+    );
+
+    console.log(
+      `TMDB: ${hasTMDB() ? "configured" : "NOT configured"}`
+    );
+  });
+}

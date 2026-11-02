@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import ObjectsGallery from "../components/ObjectsGallery";
+import { getTitleUrl } from "../utils/slug";
 import { getDiscoverMovies, getTMDBImageUrl } from "../api/tmdb";
 
 const GENRES = [
@@ -76,7 +77,6 @@ function Discover() {
         {/* HERO SECTION */}
         <section className="discover-hero">
           <div className="discover-hero-content">
-            <p className="eyebrow">CURATED & TRENDING</p>
             <h1>
               Discover the best of
               <br />
@@ -123,7 +123,7 @@ function Discover() {
                   {featured.overview ||
                     "A landmark cinematic experience hailed by critics and audiences alike. See consensus ratings and breakdown on Vouch."}
                 </p>
-                <Link to={`/product/${featured.id}`} className="spotlight-btn">
+                <Link to={getTitleUrl(featured)} className="spotlight-btn">
                   View Full Consensus & Reviews →
                 </Link>
               </div>
@@ -217,7 +217,7 @@ function Discover() {
 
                 return (
                   <Link
-                    to={`/product/${movie.id}`}
+                    to={getTitleUrl(movie)}
                     className="movie-card discover-card"
                     key={movie.id}
                   >

@@ -5,6 +5,7 @@ import SearchBar from "../components/SearchBar";
 import MovieShelf from "../components/MovieShelf";
 import { CURATED_SHELVES } from "../data/shelfData";
 import { useAuthModal } from "../context/AuthModalContext";
+import { getTitleUrl } from "../utils/slug";
 
 const movies = [
   {
@@ -67,8 +68,6 @@ function Home() {
         {/* HERO */}
         <section className="hero">
           <div className="hero-content">
-            <p className="eyebrow">THE INTERNET'S OPINION, IN ONE PLACE</p>
-
             <h1>
               Before you buy.
               <br />
@@ -91,7 +90,7 @@ function Home() {
             {movies.slice(0, 3).map((movie, index) => (
               <Link
                 key={movie.id}
-                to={`/product/${movie.id}`}
+                to={getTitleUrl(movie)}
                 className={`hero-poster poster-${index + 1}`}
               >
                 <img src={movie.image} alt={movie.title} />
@@ -149,7 +148,6 @@ function Home() {
         {/* HOW VOUCH WORKS */}
         <section className="how-section">
           <div className="how-heading">
-            <p className="eyebrow">HOW VOUCH WORKS</p>
             <h2>One place for every opinion.</h2>
           </div>
 
@@ -182,8 +180,6 @@ function Home() {
 
         {/* CTA */}
         <section className="cta">
-          <p className="eyebrow">YOUR OPINION MATTERS</p>
-
           <h2>
             Found something worth
             <br />

@@ -85,12 +85,15 @@ function AuthModal() {
   // Demo account filler
   const fillDemo = (role) => {
     resetMessages();
-    if (role === "critic") {
+    if (role === "viewer") {
+      setEmail("viewer@vouch.media");
+      setPassword("RVU@123");
+    } else if (role === "critic") {
       setEmail("critic@vouch.media");
-      setPassword("CriticPass2026!");
+      setPassword("RVU@123");
     } else {
       setEmail("demo@vouch.media");
-      setPassword("DemoPass123!");
+      setPassword("RVU@123");
     }
   };
 
@@ -115,7 +118,7 @@ function AuthModal() {
       setLoading(false);
 
       if (authError) {
-        setError(authError.message);
+        setError(authError.message || "Failed to sign in. Please check your credentials.");
         return;
       }
 
@@ -403,18 +406,20 @@ function AuthModal() {
                 </label>
 
                 <div className="auth-demo-chips">
-                  <span className="auth-demo-intro">Test:</span>
+                  <span className="auth-demo-intro">Demo:</span>
                   <button
                     type="button"
-                    className="auth-demo-chip"
-                    onClick={() => fillDemo("cinephile")}
+                    className="auth-demo-chip highlight"
+                    onClick={() => fillDemo("viewer")}
+                    title="Load Demo Viewer credentials (password: RVU@123)"
                   >
-                    🍿 Cinephile
+                    🍿 Demo Viewer
                   </button>
                   <button
                     type="button"
                     className="auth-demo-chip"
                     onClick={() => fillDemo("critic")}
+                    title="Load Critic credentials"
                   >
                     🎬 Critic
                   </button>

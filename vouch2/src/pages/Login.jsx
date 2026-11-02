@@ -54,7 +54,7 @@ function Login() {
       });
 
       if (authError) {
-        setError(authError.message);
+        setError(authError.message || "Failed to sign in. Please verify your credentials.");
         setLoading(false);
         return;
       }
@@ -101,14 +101,18 @@ function Login() {
 
   // Quick helper persona fills for testing & evaluation
   const fillPersona = (role) => {
-    if (role === "critic") {
+    if (role === "viewer") {
+      setEmail("viewer@vouch.media");
+      setPassword("RVU@123");
+      setInfoMessage("🍿 Demo Viewer credentials loaded (password: RVU@123). Press 'Enter the Screening Room'.");
+    } else if (role === "critic") {
       setEmail("critic@vouch.media");
-      setPassword("CriticPass2026!");
-      setInfoMessage("🎬 Critic demo credentials loaded. Press 'Enter the Screening Room'.");
+      setPassword("RVU@123");
+      setInfoMessage("🎬 Critic demo credentials loaded (password: RVU@123). Press 'Enter the Screening Room'.");
     } else {
       setEmail("demo@vouch.media");
-      setPassword("DemoPass123!");
-      setInfoMessage("🍿 Cinephile demo credentials loaded. Press 'Enter the Screening Room'.");
+      setPassword("RVU@123");
+      setInfoMessage("🍿 Demo credentials loaded (password: RVU@123). Press 'Enter the Screening Room'.");
     }
     setError("");
   };
@@ -215,10 +219,10 @@ function Login() {
               <div className="demo-chips-row">
                 <button
                   type="button"
-                  className="demo-persona-chip"
-                  onClick={() => fillPersona("cinephile")}
+                  className="demo-persona-chip highlight"
+                  onClick={() => fillPersona("viewer")}
                 >
-                  🍿 Cinephile Demo
+                  🍿 Demo Viewer
                 </button>
                 <button
                   type="button"

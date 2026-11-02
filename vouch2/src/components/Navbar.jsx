@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useAuthModal } from "../context/AuthModalContext";
+import { useTheme } from "../context/ThemeContext";
 
 function Navbar() {
   const navigate = useNavigate();
   const { openLogin, openSignup } = useAuthModal();
+  const { isDark, toggleTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [user, setUser] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -126,6 +128,16 @@ function Navbar() {
       </div>
 
       <div className="nav-actions">
+        <button
+          type="button"
+          className="theme-toggle-btn"
+          onClick={toggleTheme}
+          aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+          title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          <span className="theme-toggle-icon">{isDark ? "☀️" : "🌙"}</span>
+        </button>
+
         {user ? (
           <div className="nav-user-menu">
             <Link to="/profile" className="nav-user-pill">

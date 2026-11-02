@@ -14,30 +14,35 @@ import WriteReview from "./pages/WriteReview";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
 import AuthModal from "./components/AuthModal";
+import DotsBackground from "./components/DotsBackground";
 import { AuthModalProvider } from "./context/AuthModalContext";
+import { ThemeProvider } from "./context/ThemeContext";
 
 function App() {
   return (
     <BrowserRouter>
-      <AuthModalProvider>
-        <ScrollToTop />
-        <AuthModal />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/discover" element={<Discover />} />
-          <Route path="/new-releases" element={<NewReleases />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/product/:id" element={<Product />} />
-          <Route path="/login" element={<Navigate to="/?auth=login" replace />} />
-          <Route path="/signup" element={<Navigate to="/?auth=signup" replace />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/category/:category/:subcategory" element={<Category />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/write-review" element={<WriteReview />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </AuthModalProvider>
+      <ThemeProvider>
+        <AuthModalProvider>
+          <ScrollToTop />
+          <DotsBackground />
+          <AuthModal />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/discover" element={<Discover />} />
+            <Route path="/new-releases" element={<NewReleases />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/product/:id" element={<Product />} />
+            <Route path="/login" element={<Navigate to="/?auth=login" replace />} />
+            <Route path="/signup" element={<Navigate to="/?auth=signup" replace />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/category/:category/:subcategory" element={<Category />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/write-review" element={<WriteReview />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthModalProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

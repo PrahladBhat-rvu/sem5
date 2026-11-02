@@ -263,7 +263,7 @@ app.get("/api/search/movie", async (req, res) => {
           results: normalizeTMDBSearchResults(data),
         });
       } catch (error) {
-        console.error("TMDB SEARCH ERROR:", error.message);
+        console.error("TMDB SEARCH ERROR:", error.message, error.cause || "");
       }
     }
 
@@ -284,6 +284,174 @@ app.get("/api/search/movie", async (req, res) => {
       details: error.message,
       results: [],
     });
+  }
+});
+
+// ============================================================
+// TMDB GENRE MAP & MOVIE DISCOVERY ENDPOINTS
+// ============================================================
+
+const TMDB_GENRES = {
+  action: 28,
+  adventure: 12,
+  animation: 16,
+  comedy: 35,
+  crime: 80,
+  documentary: 99,
+  drama: 18,
+  family: 10751,
+  fantasy: 14,
+  history: 36,
+  horror: 27,
+  music: 10402,
+  mystery: 9648,
+  romance: 10749,
+  "sci-fi": 878,
+  scifi: 878,
+  sciencefiction: 878,
+  thriller: 53,
+  war: 10752,
+  western: 37,
+};
+
+// ------------------------------------------------------------
+// TRENDING MOVIES
+// ------------------------------------------------------------
+app.get("/api/movies/trending", async (req, res) => {
+  try {
+    const timeWindow = req.query.timeWindow === "day" ? "day" : "week";
+
+    if (hasTMDB()) {
+      const response = await tmdbRequest(`/trending/movie/${timeWindow}`);
+
+      if (response.ok) {
+        const data = await response.json();
+        return res.json({
+          source: "tmdb",
+          results: normalizeTMDBSearchResults(data),
+        });
+      }
+    }
+
+    return res.status(503).json({
+      error: "Trending movies unavailable.",
+      results: [],
+    });
+  } catch (error) {
+    console.error("TRENDING ERROR:", error);
+    res.status(500).json({ error: error.message, results: [] });
+  }
+});
+
+// ------------------------------------------------------------
+// NEW RELEASES / NOW PLAYING
+// ------------------------------------------------------------
+app.get("/api/movies/new-releases", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page, 10) || 1;
+
+    if (hasTMDB()) {
+      const response = await tmdbRequest(`/movie/now_playing?language=en-US&page=${page}`);
+
+      if (response.ok) {
+        const data = await response.json();
+        return res.json({
+          source: "tmdb",
+          results: normalizeTMDBSearchResults(data),
+        });
+      }
+    }
+
+    return res.status(503).json({
+      error: "New releases unavailable.",
+      results: [],
+    });
+  } catch (error) {
+    console.error("NEW RELEASES ERROR:", error);
+    res.status(500).json({ error: error.message, results: [] });
+  }
+});
+
+// ------------------------------------------------------------
+// DISCOVER MOVIES
+// ------------------------------------------------------------
+app.get("/api/movies/discover", async (req, res) => {
+  try {
+    const { genre, sortBy = "popularity.desc", page = 1 } = req.query;
+
+    if (hasTMDB()) {
+      const params = new URLSearchParams({
+        include_adult: "false",
+        include_video: "false",
+        language: "en-US",
+        page: String(page),
+        sort_by: String(sortBy),
+      });
+
+      if (genre) {
+        const genreId = TMDB_GENRES[genre.toLowerCase()] || genre;
+        params.append("with_genres", String(genreId));
+      }
+
+      const response = await tmdbRequest(`/discover/movie?${params.toString()}`);
+
+      if (response.ok) {
+        const data = await response.json();
+        return res.json({
+          source: "tmdb",
+          results: normalizeTMDBSearchResults(data),
+        });
+      }
+    }
+
+    return res.status(503).json({
+      error: "Discover unavailable.",
+      results: [],
+    });
+  } catch (error) {
+    console.error("DISCOVER ERROR:", error);
+    res.status(500).json({ error: error.message, results: [] });
+  }
+});
+
+// ------------------------------------------------------------
+// CATEGORY MOVIES (for Category.jsx)
+// ------------------------------------------------------------
+app.get("/api/movies/category/:subcategory", async (req, res) => {
+  try {
+    const sub = (req.params.subcategory || "").toLowerCase();
+    const genreId = TMDB_GENRES[sub];
+
+    if (hasTMDB() && genreId) {
+      const response = await tmdbRequest(
+        `/discover/movie?with_genres=${genreId}&sort_by=popularity.desc&include_adult=false&language=en-US`
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        const movies = (data.results || []).map((m) => ({
+          id: m.id,
+          title: m.title || "Untitled",
+          year: m.release_date?.slice(0, 4) || "",
+          rating: m.vote_average ? Number(m.vote_average).toFixed(1) : "—",
+          image: m.poster_path ? `/api/image/w500${m.poster_path}` : null,
+        }));
+
+        return res.json({
+          movies,
+          totalResults: data.total_results || movies.length,
+        });
+      }
+    }
+
+    return res.status(503).json({
+      error: "Category unavailable.",
+      movies: [],
+      totalResults: 0,
+    });
+  } catch (error) {
+    console.error("CATEGORY ERROR:", error);
+    res.status(500).json({ error: error.message, movies: [], totalResults: 0 });
   }
 });
 

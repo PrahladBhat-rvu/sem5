@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import SearchBar from "../components/SearchBar";
 
 const categories = [
   {
@@ -16,7 +17,6 @@ const categories = [
       ["Romance", "/category/movies/romance"],
     ],
   },
-
   {
     title: "Products",
     description: "Reviews for things you're thinking about buying.",
@@ -28,7 +28,6 @@ const categories = [
       ["Fitness", "/category/products/fitness"],
     ],
   },
-
   {
     title: "Games",
     description: "See what gamers have to say.",
@@ -40,7 +39,6 @@ const categories = [
       ["Mobile", "/category/games/mobile"],
     ],
   },
-
   {
     title: "Books",
     description: "Discover your next read through real opinions.",
@@ -60,7 +58,6 @@ function Categories() {
       <Navbar />
 
       <main className="categories-page">
-
         <section className="categories-hero">
           <p className="eyebrow">EXPLORE VOUCH</p>
 
@@ -74,52 +71,32 @@ function Categories() {
             Explore reviews across movies, products, games,
             books, and everything else worth having an opinion about.
           </p>
+
+          <SearchBar />
         </section>
 
         <section className="categories-list">
-
           {categories.map((category, index) => (
-            <div
-              className="category-section"
-              key={category.title}
-            >
-
-              <div className="category-number">
-                0{index + 1}
-              </div>
+            <div className="category-section" key={category.title}>
+              <div className="category-number">0{index + 1}</div>
 
               <div className="category-content">
-
                 <div className="category-heading">
                   <h2>{category.title}</h2>
-
-                  <p>
-                    {category.description}
-                  </p>
+                  <p>{category.description}</p>
                 </div>
 
                 <div className="subcategory-grid">
-
                   {category.items.map(([name, path]) => (
-                    <Link
-                      key={name}
-                      to={path}
-                      className="subcategory"
-                    >
+                    <Link key={name} to={path} className="subcategory">
                       <span>{name}</span>
-
-                      <span className="subcategory-arrow">
-                        ↗
-                      </span>
+                      <span className="subcategory-arrow">↗</span>
                     </Link>
                   ))}
-
                 </div>
-
               </div>
             </div>
           ))}
-
         </section>
       </main>
     </div>

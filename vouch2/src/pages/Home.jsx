@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "../components/Navbar";
+import SearchBar from "../components/SearchBar";
+import { useAuthModal } from "../context/AuthModalContext";
 
 const movies = [
   {
@@ -39,6 +41,7 @@ const movies = [
 
 function Home() {
   const navigate = useNavigate();
+  const { openSignup } = useAuthModal();
   const [searchQuery, setSearchQuery] = useState("");
 
   function handleSearch(e) {
@@ -78,30 +81,7 @@ function Home() {
             </p>
 
             {/* SEARCH */}
-            <form className="hero-search" onSubmit={handleSearch}>
-              <span className="search-icon">⌕</span>
-
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for a movie, product, game..."
-              />
-
-              <button type="submit" className="search-button">
-                Search
-              </button>
-            </form>
-
-            {/* POPULAR SEARCHES */}
-            <div className="popular">
-              <span>Popular:</span>
-
-              <Link to="/search?q=Interstellar">Interstellar</Link>
-              <Link to="/search?q=iPhone">iPhone</Link>
-              <Link to="/search?q=AirPods">AirPods</Link>
-              <Link to="/search?q=PS5">PS5</Link>
-            </div>
+            <SearchBar showPopular={true} />
           </div>
 
           {/* HERO POSTERS */}
@@ -210,7 +190,13 @@ function Home() {
             talking about?
           </h2>
 
-          <Link to="/signup">Join Vouch →</Link>
+          <button
+            type="button"
+            className="home-cta-button"
+            onClick={openSignup}
+          >
+            Join Vouch →
+          </button>
         </section>
       </main>
     </div>

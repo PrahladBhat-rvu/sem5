@@ -71,6 +71,30 @@ export default {
       return tmdbRequest(`/search/movie?${params.toString()}`, env);
     }
 
+    if (url.pathname === "/api/movies/trending") {
+      const timeWindow = url.searchParams.get("timeWindow") === "day" ? "day" : "week";
+      return tmdbRequest(`/trending/movie/${timeWindow}`, env);
+    }
+
+    if (url.pathname === "/api/movies/new-releases") {
+      const page = url.searchParams.get("page") || "1";
+      return tmdbRequest(`/movie/now_playing?language=en-US&page=${page}`, env);
+    }
+
+    if (url.pathname === "/api/movies/discover") {
+      const genre = url.searchParams.get("genre");
+      const sortBy = url.searchParams.get("sortBy") || "popularity.desc";
+      const page = url.searchParams.get("page") || "1";
+      const params = new URLSearchParams({
+        include_adult: "false",
+        language: "en-US",
+        page,
+        sort_by: sortBy,
+      });
+      if (genre) params.append("with_genres", genre);
+      return tmdbRequest(`/discover/movie?${params.toString()}`, env);
+    }
+
     const movieMatch = url.pathname.match(/^\/api\/movie\/(\d+)$/);
 
     if (movieMatch) {

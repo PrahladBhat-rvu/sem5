@@ -517,6 +517,51 @@ app.get("/api/movie/:id", async (req, res) => {
 
         // Successful OMDb response
         if (data.Response === "True") {
+          // If TMDB is available, enrich with trailers (videos), credits, and backdrops
+          if (hasTMDB()) {
+            try {
+              let tmdbId = null;
+              const findRes = await tmdbRequest(`/find/${encodeURIComponent(data.imdbID || effectiveId)}?external_source=imdb_id`);
+              if (findRes.ok) {
+                const findJson = await findRes.json();
+                if (Array.isArray(findJson.movie_results) && findJson.movie_results.length > 0) {
+                  tmdbId = findJson.movie_results[0].id;
+                }
+              }
+
+              if (!tmdbId && data.Title) {
+                const searchRes = await tmdbRequest(`/search/movie?query=${encodeURIComponent(data.Title)}&language=en-US`);
+                if (searchRes.ok) {
+                  const searchJson = await searchRes.json();
+                  if (Array.isArray(searchJson.results) && searchJson.results.length > 0) {
+                    tmdbId = searchJson.results[0].id;
+                  }
+                }
+              }
+
+              if (tmdbId) {
+                const detailsRes = await tmdbRequest(`/movie/${tmdbId}?append_to_response=credits,videos,recommendations,watch/providers&language=en-US`);
+                if (detailsRes.ok) {
+                  const tmdbData = await detailsRes.json();
+                  return res.json({
+                    ...tmdbData,
+                    ...data,
+                    videos: tmdbData.videos || null,
+                    credits: tmdbData.credits || null,
+                    watch_providers: tmdbData["watch/providers"] || tmdbData.watch_providers || null,
+                    backdrop_path: tmdbData.backdrop_path || null,
+                    poster_path: tmdbData.poster_path || null,
+                    tmdbID: tmdbData.id,
+                    id: data.imdbID || tmdbData.id,
+                    source: "omdb+tmdb",
+                  });
+                }
+              }
+            } catch (enrichErr) {
+              console.warn("Could not enrich OMDb movie with TMDB details:", enrichErr.message);
+            }
+          }
+
           return res.json({
             ...data,
 
@@ -601,6 +646,24 @@ app.get("/api/movie/:id", async (req, res) => {
           });
         }
 
+        try {
+          const fullRes = await tmdbRequest(
+            `/movie/${movie.id}?append_to_response=credits,videos,recommendations,watch/providers&language=en-US`
+          );
+          if (fullRes.ok) {
+            const detailed = await fullRes.json();
+            return res.json({
+              ...detailed,
+              source: "tmdb",
+              imdbID: movieId,
+              id: detailed.id,
+              watch_providers: detailed["watch/providers"] || detailed.watch_providers || null,
+            });
+          }
+        } catch (detailErr) {
+          console.warn("TMDB full detail lookup failed:", detailErr.message);
+        }
+
         return res.json({
           ...movie,
 
@@ -646,22 +709,37 @@ app.get("/api/movie/:id", async (req, res) => {
     try {
       console.log(`TMDB movie request: ${effectiveId}`);
 
-      const response = await tmdbRequest(
+      let isTv = false;
+      let response = await tmdbRequest(
         `/movie/${encodeURIComponent(
           effectiveId
-        )}?append_to_response=credits,videos,recommendations&language=en-US`
+        )}?append_to_response=credits,videos,recommendations,watch/providers&language=en-US`
       );
+
+      // If numeric ID not found as movie in TMDB, check if it's a TV series!
+      if (!response.ok && response.status === 404) {
+        console.log(`TMDB movie not found for ${effectiveId}, checking TMDB TV...`);
+        const tvResponse = await tmdbRequest(
+          `/tv/${encodeURIComponent(
+            effectiveId
+          )}?append_to_response=credits,videos,recommendations,watch/providers&language=en-US`
+        );
+        if (tvResponse.ok) {
+          response = tvResponse;
+          isTv = true;
+        }
+      }
 
       if (!response.ok) {
         const body = await response.text();
 
         console.error(
-          `TMDB movie failed: ${response.status}`,
+          `TMDB item failed: ${response.status}`,
           body
         );
 
         return res.status(response.status).json({
-          error: "Failed to get movie details from TMDB.",
+          error: "Failed to get title details from TMDB.",
         });
       }
 
@@ -669,17 +747,24 @@ app.get("/api/movie/:id", async (req, res) => {
 
       return res.json({
         ...data,
+        title: data.name || data.title || data.original_name || data.original_title,
+        release_date: data.first_air_date || data.release_date,
+        runtime: Array.isArray(data.episode_run_time) && data.episode_run_time.length > 0
+          ? `${data.episode_run_time[0]}m`
+          : data.runtime || "45m",
         source: "tmdb",
+        media_type: isTv ? "tv" : "movie",
         tmdbID: data.id,
+        watch_providers: data["watch/providers"] || data.watch_providers || null,
       });
     } catch (error) {
       console.error(
-        `TMDB MOVIE ERROR (${effectiveId}):`,
+        `TMDB ITEM ERROR (${effectiveId}):`,
         error.message
       );
 
       return res.status(500).json({
-        error: "Failed to get movie details.",
+        error: "Failed to get title details.",
         details: error.message,
       });
     }
@@ -693,18 +778,28 @@ app.get("/api/movie/:id", async (req, res) => {
       const searchTitle = effectiveId.replace(/-/g, " ");
       console.log(`Searching title fallback for slug: "${searchTitle}"`);
       if (hasTMDB()) {
-        const searchRes = await tmdbRequest(`/search/movie?query=${encodeURIComponent(searchTitle)}&language=en-US`);
+        const searchRes = await tmdbRequest(`/search/multi?query=${encodeURIComponent(searchTitle)}&language=en-US`);
         if (searchRes.ok) {
           const searchData = await searchRes.json();
           if (Array.isArray(searchData.results) && searchData.results.length > 0) {
-            const topMatch = searchData.results[0];
-            const detailsRes = await tmdbRequest(`/movie/${topMatch.id}?append_to_response=credits,videos,recommendations&language=en-US`);
+            const topMatch =
+              searchData.results.find((r) => r.media_type === "movie" || r.media_type === "tv") ||
+              searchData.results[0];
+            const endpoint = topMatch.media_type === "tv" ? "tv" : "movie";
+            const detailsRes = await tmdbRequest(`/${endpoint}/${topMatch.id}?append_to_response=credits,videos,recommendations,watch/providers&language=en-US`);
             if (detailsRes.ok) {
               const details = await detailsRes.json();
               return res.json({
                 ...details,
+                title: details.name || details.title || details.original_name,
+                release_date: details.first_air_date || details.release_date,
+                runtime: Array.isArray(details.episode_run_time) && details.episode_run_time.length > 0
+                  ? `${details.episode_run_time[0]}m`
+                  : details.runtime || "45m",
                 source: "tmdb",
+                media_type: endpoint,
                 tmdbID: details.id,
+                watch_providers: details["watch/providers"] || details.watch_providers || null,
               });
             }
           }

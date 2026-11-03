@@ -9,7 +9,7 @@ import { getTitleUrl } from "../utils/slug";
 
 const movies = [
   {
-    id: 1,
+    id: 157336,
     title: "Interstellar",
     year: "2014",
     rating: "8.7",
@@ -17,7 +17,7 @@ const movies = [
       "/api/image/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
   },
   {
-    id: 2,
+    id: 155,
     title: "The Dark Knight",
     year: "2008",
     rating: "9.0",
@@ -25,7 +25,7 @@ const movies = [
       "/api/image/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
   },
   {
-    id: 3,
+    id: 27205,
     title: "Inception",
     year: "2010",
     rating: "8.8",
@@ -33,7 +33,7 @@ const movies = [
       "/api/image/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
   },
   {
-    id: 4,
+    id: 693134,
     title: "Dune: Part Two",
     year: "2024",
     rating: "8.6",

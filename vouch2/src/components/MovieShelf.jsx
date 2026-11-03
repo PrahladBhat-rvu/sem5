@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
+import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { getTitleUrl } from "../utils/slug";
 
 /**
@@ -117,7 +118,7 @@ export default function MovieShelf({
               aria-label="Scroll left"
               title="Previous titles"
             >
-              ‹
+              <FaChevronLeft style={{ fontSize: "11px" }} />
             </button>
             <button
               type="button"
@@ -127,7 +128,7 @@ export default function MovieShelf({
               aria-label="Scroll right"
               title="More titles"
             >
-              ›
+              <FaChevronRight style={{ fontSize: "11px" }} />
             </button>
           </div>
         </div>
@@ -179,8 +180,8 @@ export default function MovieShelf({
                     <div className="shelf-card-meta">
                       {m.year && <span className="shelf-meta-year">{m.year}</span>}
                       {m.rating && (
-                        <span className="shelf-meta-rating">
-                          <span className="star-icon">★</span> {m.rating}
+                        <span className="shelf-meta-rating" style={{ display: "inline-flex", alignItems: "center" }}>
+                          <FaStar className="star-icon" style={{ fontSize: "10px", color: "#f59e0b", marginRight: "3px" }} /> {m.rating}
                         </span>
                       )}
                       {m.genres?.[0] && (
@@ -202,7 +203,7 @@ export default function MovieShelf({
             onClick={() => scrollByPages(1)}
             aria-label="Next titles"
           >
-            ›
+            <FaChevronRight style={{ fontSize: "12px" }} />
           </button>
         )}
       </div>

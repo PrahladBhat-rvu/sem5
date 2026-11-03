@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { FaBars, FaTimes, FaSearch } from "react-icons/fa";
 import { supabase } from "../lib/supabase";
 import { useAuthModal } from "../context/AuthModalContext";
 import { useTheme } from "../context/ThemeContext";
@@ -149,7 +150,7 @@ function Navbar() {
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle navigation menu"
         >
-          {mobileMenuOpen ? "✕" : "☰"}
+          {mobileMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
 
         <div className={`nav-links ${mobileMenuOpen ? "mobile-open" : ""}`}>
@@ -249,7 +250,7 @@ function Navbar() {
                 onClick={() => setSearchQuery("")}
                 aria-label="Clear input"
               >
-                ✕
+                <FaTimes style={{ fontSize: "11px" }} />
               </button>
             ) : (
               <kbd className="nav-search-shortcut" title="Press / to focus">

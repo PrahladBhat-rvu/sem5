@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import "./index.css";
+import "./mobile.css";
 import Home from "./pages/Home";
 import Discover from "./pages/Discover";
 import NewReleases from "./pages/NewReleases";
@@ -15,6 +16,7 @@ import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
 import AuthModal from "./components/AuthModal";
 import KongBackground from "./components/KongBackground";
+import MobileBottomNav from "./components/MobileBottomNav";
 import { AuthModalProvider } from "./context/AuthModalContext";
 import { ThemeProvider } from "./context/ThemeContext";
 
@@ -26,6 +28,7 @@ function App() {
           <ScrollToTop />
           <KongBackground />
           <AuthModal />
+          <MobileBottomNav />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/discover" element={<Discover />} />

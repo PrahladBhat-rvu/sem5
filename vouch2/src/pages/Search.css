@@ -1,0 +1,174 @@
+/* =========================================================
+   VOUCH - SEARCH STATUS & ERROR CARD REFINEMENT
+   Matches website dark cinematic theme & light mode
+   ========================================================= */
+
+.search-page-enhanced .search-status-card {
+  max-width: 580px;
+  margin: 40px auto 70px;
+  padding: 44px 36px;
+  border-radius: 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s ease;
+
+  /* Default (Dark Cinematic Theme) */
+  background: rgba(20, 20, 24, 0.82) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Error state styling with subtle warm crimson ambient glow */
+.search-page-enhanced .search-status-card.error {
+  border-color: rgba(239, 68, 68, 0.28) !important;
+  background: radial-gradient(
+    ellipse at 50% -10%,
+    rgba(239, 68, 68, 0.14) 0%,
+    rgba(20, 20, 24, 0.94) 75%
+  ) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 35px rgba(239, 68, 68, 0.08) !important;
+}
+
+/* Empty / No results styling */
+.search-page-enhanced .search-status-card.empty {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  background: radial-gradient(
+    ellipse at 50% -10%,
+    rgba(255, 84, 54, 0.07) 0%,
+    rgba(20, 20, 24, 0.94) 75%
+  ) !important;
+}
+
+/* Refined circular icon badge */
+.search-page-enhanced .status-icon-badge {
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-page-enhanced .status-icon-badge.error-badge {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.32);
+  box-shadow: 0 0 24px rgba(239, 68, 68, 0.22);
+}
+
+.search-page-enhanced .status-icon-badge.empty-badge {
+  background: rgba(255, 255, 255, 0.05);
+  color: #a1a1aa;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Headings & copy */
+.search-page-enhanced .search-status-card h3 {
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  margin-bottom: 10px !important;
+  color: #ffffff !important;
+}
+
+.search-page-enhanced .search-status-card p {
+  font-size: 15px !important;
+  color: #a1a1aa !important;
+  line-height: 1.6 !important;
+  max-width: 440px;
+  margin: 0 auto 24px !important;
+}
+
+/* Action button */
+.search-page-enhanced .status-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #ff5436 !important;
+  color: #ffffff !important;
+  border: 1px solid #ff5436 !important;
+  padding: 12px 28px !important;
+  border-radius: 999px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 4px 18px rgba(255, 84, 54, 0.35) !important;
+}
+
+.search-page-enhanced .status-btn:hover {
+  background: #e0412b !important;
+  border-color: #e0412b !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(255, 84, 54, 0.5) !important;
+}
+
+.search-page-enhanced .status-btn .btn-icon {
+  font-size: 12px;
+}
+
+/* Empty suggestion pills */
+.search-page-enhanced .empty-suggestions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+/* =========================================================
+   LIGHT THEME OVERRIDES
+   ========================================================= */
+[data-theme="light"] .search-page-enhanced .search-status-card {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .search-page-enhanced .search-status-card.error {
+  border-color: rgba(239, 68, 68, 0.25) !important;
+  background: radial-gradient(
+    ellipse at 50% -10%,
+    rgba(239, 68, 68, 0.06) 0%,
+    rgba(255, 255, 255, 0.98) 75%
+  ) !important;
+  box-shadow: 0 16px 45px rgba(239, 68, 68, 0.08) !important;
+}
+
+[data-theme="light"] .search-page-enhanced .search-status-card.empty {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  background: radial-gradient(
+    ellipse at 50% -10%,
+    rgba(255, 84, 54, 0.04) 0%,
+    rgba(255, 255, 255, 0.98) 75%
+  ) !important;
+}
+
+[data-theme="light"] .search-page-enhanced .status-icon-badge.error-badge {
+  background: rgba(239, 68, 68, 0.08);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.1);
+}
+
+[data-theme="light"] .search-page-enhanced .status-icon-badge.empty-badge {
+  background: rgba(0, 0, 0, 0.04);
+  color: #71717a;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .search-page-enhanced .search-status-card h3 {
+  color: #18181b !important;
+}
+
+[data-theme="light"] .search-page-enhanced .search-status-card p {
+  color: #52525b !important;
+}
+

@@ -1,7 +1,9 @@
 import { useEffect, useState, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { FaExclamationTriangle, FaFilm, FaRedo, FaUndo } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
+import "./Search.css";
 import { getTitleUrl } from "../utils/slug";
 import {
   searchMovies,
@@ -279,16 +281,19 @@ function Search() {
 
         {/* ERROR STATE */}
         {!loading && error && (
-          <section className="search-status-card error">
-            <div className="status-icon">⚠️</div>
+          <section className="search-status-card error" role="alert">
+            <div className="status-icon-badge error-badge">
+              <FaExclamationTriangle />
+            </div>
             <h3>Search temporarily unavailable</h3>
             <p>{error}</p>
             <button
               type="button"
-              className="status-btn"
+              className="status-btn status-btn-retry"
               onClick={() => handleSuggestionClick(currentQuery)}
             >
-              Retry Search
+              <FaRedo className="btn-icon" />
+              <span>Retry Search</span>
             </button>
           </section>
         )}
@@ -296,7 +301,9 @@ function Search() {
         {/* NO RESULTS STATE */}
         {!loading && !error && currentQuery && results.length === 0 && (
           <section className="search-status-card empty">
-            <div className="status-icon">🎬</div>
+            <div className="status-icon-badge empty-badge">
+              <FaFilm />
+            </div>
             <h3>No movies matched "{currentQuery}"</h3>
             <p>
               Double check the spelling or try searching for a franchise, actor, or popular title below.
@@ -331,13 +338,18 @@ function Search() {
 
             {filteredAndSortedResults.length === 0 ? (
               <div className="search-status-card empty">
+                <div className="status-icon-badge empty-badge">
+                  <FaUndo />
+                </div>
+                <h3>No results in {selectedGenre}</h3>
                 <p>No results found for genre "{selectedGenre}".</p>
                 <button
                   type="button"
                   className="status-btn"
                   onClick={() => setSelectedGenre("All")}
                 >
-                  Reset Genre Filter
+                  <FaUndo className="btn-icon" />
+                  <span>Reset Genre Filter</span>
                 </button>
               </div>
             ) : (

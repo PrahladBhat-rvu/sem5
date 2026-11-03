@@ -39,14 +39,16 @@ export async function searchMovies(query) {
 // MOVIE DETAILS
 // ============================================================
 
-export async function getMovieDetails(movieId) {
+export async function getMovieDetails(movieId, type) {
   if (!movieId) {
     throw new Error("Movie ID is required.");
   }
 
-  const response = await fetch(
-    `${API_BASE}/movie/${encodeURIComponent(movieId)}`
-  );
+  const endpoint = type === "tv"
+    ? `${API_BASE}/tv/${encodeURIComponent(movieId)}`
+    : `${API_BASE}/movie/${encodeURIComponent(movieId)}${type ? `?type=${type}` : ""}`;
+
+  const response = await fetch(endpoint);
 
   if (!response.ok) {
     let message = `Movie details failed: ${response.status}`;

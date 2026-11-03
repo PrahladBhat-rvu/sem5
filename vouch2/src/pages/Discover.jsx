@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FaStar, FaArrowRight } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import ObjectsGallery from "../components/ObjectsGallery";
@@ -114,7 +115,10 @@ function Discover() {
                 <h2>{featured.title}</h2>
                 <div className="spotlight-meta">
                   <span className="spotlight-year">{featured.year || "2024"}</span>
-                  <span className="spotlight-rating">★ {featured.rating || featured.vote_average || "8.5"}</span>
+                  <span className="spotlight-rating" style={{ display: "inline-flex", alignItems: "center" }}>
+                    <FaStar style={{ color: "#f59e0b", marginRight: "4px", fontSize: "12px" }} />
+                    {featured.rating || featured.vote_average || "8.5"}
+                  </span>
                   {featured.genres && (
                     <span className="spotlight-genres">{featured.genres.join(" • ")}</span>
                   )}
@@ -123,8 +127,9 @@ function Discover() {
                   {featured.overview ||
                     "A landmark cinematic experience hailed by critics and audiences alike. See consensus ratings and breakdown on Vouch."}
                 </p>
-                <Link to={getTitleUrl(featured)} className="spotlight-btn">
-                  View Full Consensus & Reviews →
+                <Link to={getTitleUrl(featured)} className="spotlight-btn" style={{ display: "inline-flex", alignItems: "center" }}>
+                  <span>View Full Consensus & Reviews</span>
+                  <FaArrowRight style={{ marginLeft: "8px", fontSize: "12px" }} />
                 </Link>
               </div>
             </div>
@@ -227,7 +232,10 @@ function Discover() {
                       ) : (
                         <div className="movie-card-placeholder">No image</div>
                       )}
-                      <div className="card-badge">★ {rating}</div>
+                      <div className="card-badge" style={{ display: "inline-flex", alignItems: "center" }}>
+                        <FaStar style={{ color: "#f59e0b", marginRight: "3px", fontSize: "11px" }} />
+                        {rating}
+                      </div>
                     </div>
                     <div className="movie-info">
                       <p className="card-type">
@@ -236,7 +244,9 @@ function Discover() {
                       <h3>{movie.title}</h3>
                       <div className="movie-meta">
                         <span>{year}</span>
-                        <span>Consensus: ★ {rating}</span>
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: "3px" }}>
+                          Consensus: <FaStar style={{ color: "#f59e0b", fontSize: "10px" }} /> {rating}
+                        </span>
                       </div>
                     </div>
                   </Link>

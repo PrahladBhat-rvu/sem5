@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { FaExclamationTriangle, FaFilm, FaRedo, FaUndo } from "react-icons/fa";
+import { FaExclamationTriangle, FaFilm, FaRedo, FaUndo, FaStar } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import "./Search.css";
@@ -25,16 +25,31 @@ const POPULAR_SUGGESTIONS = [
 const QUICK_GENRES = ["All", "Action", "Sci-Fi", "Drama", "Comedy", "Horror"];
 
 function getPosterUrl(movie) {
-  if (movie?.Poster && movie.Poster !== "N/A") {
-    return `/api/image/omdb?url=${encodeURIComponent(movie.Poster)}`;
+  const p =
+    movie?.Poster && movie.Poster !== "N/A"
+      ? movie.Poster
+      : movie?.poster && movie.poster !== "N/A"
+      ? movie.poster
+      : movie?.poster_path;
+
+  if (!p) return null;
+
+  // If already relative proxy or local path
+  if (p.startsWith("/api/image/")) {
+    return p;
   }
-  if (movie?.poster && movie.poster !== "N/A") {
-    return `/api/image/omdb?url=${encodeURIComponent(movie.poster)}`;
+  // Full remote URLs
+  if (p.startsWith("http://") || p.startsWith("https://")) {
+    if (p.includes("media-amazon.com")) {
+      return `/api/image/omdb?url=${encodeURIComponent(p)}`;
+    }
+    return p;
   }
-  if (movie?.poster_path) {
-    return getTMDBImageUrl(movie.poster_path);
+  // TMDB relative filename (e.g. /qJ2tW6WMUDux911r6m7haRef0WH.jpg)
+  if (p.startsWith("/")) {
+    return getTMDBImageUrl(p);
   }
-  return null;
+  return `/api/image/omdb?url=${encodeURIComponent(p)}`;
 }
 
 function getTitle(movie) {
@@ -383,11 +398,14 @@ function Search() {
                           />
                         ) : (
                           <div className="movie-card-placeholder">
-                            <span className="placeholder-icon">🎞️</span>
+                            <FaFilm className="placeholder-icon" style={{ fontSize: "24px", opacity: 0.6, marginBottom: "6px" }} />
                             <span>No Poster Available</span>
                           </div>
                         )}
-                        <span className="card-badge">★ {rating}</span>
+                        <span className="card-badge" style={{ display: "inline-flex", alignItems: "center" }}>
+                          <FaStar style={{ color: "#f59e0b", marginRight: "3px", fontSize: "11px" }} />
+                          {rating}
+                        </span>
                       </div>
 
                       <div className="movie-info">
@@ -397,7 +415,9 @@ function Search() {
                         <h3>{title}</h3>
                         <div className="movie-meta">
                           <span>{year}</span>
-                          <span className="rating-pill">Consensus: ★ {rating}</span>
+                          <span className="rating-pill" style={{ display: "inline-flex", alignItems: "center", gap: "3px" }}>
+                            Consensus: <FaStar style={{ color: "#f59e0b", fontSize: "10px" }} /> {rating}
+                          </span>
                         </div>
                       </div>
                     </Link>
@@ -436,14 +456,20 @@ function Search() {
                     ) : (
                       <div className="movie-card-placeholder">No image</div>
                     )}
-                    <span className="card-badge">★ {movie.rating}</span>
+                    <span className="card-badge" style={{ display: "inline-flex", alignItems: "center" }}>
+                      <FaStar style={{ color: "#f59e0b", marginRight: "3px", fontSize: "11px" }} />
+                      {movie.rating}
+                    </span>
                   </div>
                   <div className="movie-info">
                     <p className="card-type">{movie.genres?.[0] || "FEATURED"}</p>
                     <h3>{movie.title}</h3>
                     <div className="movie-meta">
                       <span>{movie.year}</span>
-                      <span>★ {movie.rating}</span>
+                      <span style={{ display: "inline-flex", alignItems: "center" }}>
+                        <FaStar style={{ color: "#f59e0b", marginRight: "3px", fontSize: "11px" }} />
+                        {movie.rating}
+                      </span>
                     </div>
                   </div>
                 </Link>

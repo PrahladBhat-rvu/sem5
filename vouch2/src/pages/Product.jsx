@@ -19,7 +19,12 @@ import {
   FaExpandAlt,
   FaCompressAlt,
   FaComments,
+  FaExternalLinkAlt,
+  FaArrowRight,
+  FaTv,
+  FaAmazon,
 } from "react-icons/fa";
+import { SiRottentomatoes, SiImdb, SiNetflix, SiAppletv, SiMax } from "react-icons/si";
 import Navbar from "../components/Navbar";
 import MovieShelf from "../components/MovieShelf";
 import {
@@ -297,16 +302,31 @@ function Stars({ rating, interactive = false, onSelect }) {
 }
 
 function getPosterUrl(movie) {
-  if (movie?.Poster && movie.Poster !== "N/A") {
-    return `/api/image/omdb?url=${encodeURIComponent(movie.Poster)}`;
+  const p =
+    movie?.Poster && movie.Poster !== "N/A"
+      ? movie.Poster
+      : movie?.poster && movie.poster !== "N/A"
+      ? movie.poster
+      : movie?.poster_path;
+
+  if (!p) return null;
+
+  // If already relative proxy or local path
+  if (p.startsWith("/api/image/")) {
+    return p;
   }
-  if (movie?.poster && movie.poster !== "N/A") {
-    return `/api/image/omdb?url=${encodeURIComponent(movie.poster)}`;
+  // Full remote URLs
+  if (p.startsWith("http://") || p.startsWith("https://")) {
+    if (p.includes("media-amazon.com")) {
+      return `/api/image/omdb?url=${encodeURIComponent(p)}`;
+    }
+    return p;
   }
-  if (movie?.poster_path) {
-    return getTMDBImageUrl(movie.poster_path);
+  // TMDB relative filename (e.g. /qJ2tW6WMUDux911r6m7haRef0WH.jpg)
+  if (p.startsWith("/")) {
+    return getTMDBImageUrl(p);
   }
-  return null;
+  return `/api/image/omdb?url=${encodeURIComponent(p)}`;
 }
 
 function getBackdropUrl(movie) {
@@ -642,11 +662,13 @@ function Product() {
         setLoading(true);
         setError("");
 
+        const isTvRoute = location.pathname.startsWith("/tvshow") || location.pathname.startsWith("/tv");
+
         // Resolve slug / name / ID to actionable movie identifier
         const resolvedId = await resolveMovieIdentifier(rawIdentifier);
         let data = null;
         try {
-          data = await getMovieDetails(resolvedId || rawIdentifier);
+          data = await getMovieDetails(resolvedId || rawIdentifier, isTvRoute ? "tv" : undefined);
         } catch (fetchErr) {
           console.warn("getMovieDetails fetch error, falling back to curated catalogs:", fetchErr);
         }
@@ -657,14 +679,14 @@ function Product() {
           for (const list of Object.values(CURATED_SHELVES)) {
             const found = list.find((m) => slugify(m.title) === cleanSlug || String(m.id) === String(rawIdentifier) || String(m.id) === String(resolvedId));
             if (found) {
-              data = { ...found, source: "curated", tmdbID: found.id };
+              data = { ...found, source: "curated", tmdbID: found.id, media_type: isTvRoute ? "tv" : (found.media_type || "movie") };
               break;
             }
           }
           if (!data) {
             const foundCurated = ALL_CURATED_MOVIES.find((m) => slugify(m.title) === cleanSlug || String(m.id) === String(rawIdentifier) || String(m.id) === String(resolvedId));
             if (foundCurated) {
-              data = { ...foundCurated, source: "curated", tmdbID: foundCurated.id };
+              data = { ...foundCurated, source: "curated", tmdbID: foundCurated.id, media_type: isTvRoute ? "tv" : (foundCurated.media_type || "movie") };
             }
           }
         }
@@ -686,7 +708,7 @@ function Product() {
           try {
             const numericId = finalMovie?.tmdbID || (/^\d+$/.test(String(finalMovie?.id)) ? finalMovie.id : null);
             if (numericId) {
-              const detailed = await getMovieDetails(numericId);
+              const detailed = await getMovieDetails(numericId, finalMovie.media_type === "tv" || isTvRoute ? "tv" : undefined);
               if (detailed && !cancelled) {
                 finalMovie = {
                   ...finalMovie,
@@ -704,7 +726,7 @@ function Product() {
                 if (Array.isArray(sResults) && sResults.length > 0) {
                   const topMatch = sResults[0];
                   if (topMatch?.id) {
-                    const detailed = await getMovieDetails(topMatch.id);
+                    const detailed = await getMovieDetails(topMatch.id, topMatch.media_type === "tv" || isTvRoute ? "tv" : undefined);
                     if (detailed && !cancelled) {
                       finalMovie = {
                         ...finalMovie,
@@ -767,7 +789,7 @@ function Product() {
         };
         updated = [itemToSave, ...list.filter((item) => String(item.id || item.imdbID) !== movieId)];
         setIsSavedInWatchlist(true);
-        showToastNotification("✓ Added to your Watchlist");
+        showToastNotification("Added to your Watchlist");
       }
       localStorage.setItem("vouch_watchlist", JSON.stringify(updated));
     } catch {
@@ -788,7 +810,7 @@ function Product() {
       } else {
         updated = [...watched, movieId];
         setIsWatched(true);
-        showToastNotification("✓ Marked as Watched");
+        showToastNotification("Marked as Watched");
       }
       localStorage.setItem("vouch_watched", JSON.stringify(updated));
     } catch {
@@ -809,7 +831,7 @@ function Product() {
       } else {
         updated = [...favs, movieId];
         setIsFavorite(true);
-        showToastNotification("♥ Added to Favorites");
+        showToastNotification("Added to Favorites");
       }
       localStorage.setItem("vouch_favorites", JSON.stringify(updated));
     } catch {
@@ -820,7 +842,7 @@ function Product() {
   const handleShare = () => {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText(window.location.href);
-      showToastNotification("✓ Title link copied to clipboard!");
+      showToastNotification("Title link copied to clipboard!");
     }
   };
 
@@ -876,7 +898,7 @@ function Product() {
     setModalText("");
     setModalAuthor("");
     setModalRating(5);
-    showToastNotification("✓ Your Vouch has been posted!");
+    showToastNotification("Your Vouch has been posted!");
   };
 
   if (loading) {
@@ -900,15 +922,16 @@ function Product() {
         <Navbar />
         <main className="product-page">
           <div className="search-state">
-            <h3>Movie not found</h3>
+            <h3>{location.pathname.startsWith("/tvshow") || location.pathname.startsWith("/tv") ? "TV Show not found" : "Title not found"}</h3>
             <p>{error || "We couldn't locate this title in our records."}</p>
             <button
               type="button"
               onClick={handleGoBack}
               className="btn-primary"
-              style={{ marginTop: "16px", display: "inline-block", cursor: "pointer" }}
+              style={{ marginTop: "16px", display: "inline-flex", alignItems: "center", cursor: "pointer" }}
             >
-              ← Go Back
+              <FaArrowLeft style={{ marginRight: "8px", fontSize: "12px" }} />
+              <span>Go Back</span>
             </button>
           </div>
         </main>
@@ -1056,10 +1079,11 @@ function Product() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inpage-theater-yt-btn"
-                    title="Watch directly on YouTube ↗"
+                    title="Watch directly on YouTube"
                   >
-                    <FaYoutube style={{ color: "#ff0000", marginRight: "6px", fontSize: "14px" }} />
-                    YouTube ↗
+                    <FaYoutube style={{ color: "#ff0000", fontSize: "14px" }} />
+                    <span>YouTube</span>
+                    <FaExternalLinkAlt style={{ fontSize: "10px", opacity: 0.8 }} />
                   </a>
                   <button
                     type="button"
@@ -1070,12 +1094,12 @@ function Product() {
                     {isTrailerFloating ? (
                       <>
                         <FaCompressAlt style={{ marginRight: "6px", fontSize: "11px" }} />
-                        Expand to Page
+                        <span>Expand to Page</span>
                       </>
                     ) : (
                       <>
                         <FaExpandAlt style={{ marginRight: "6px", fontSize: "11px" }} />
-                        Float Mini-Player
+                        <span>Float Mini-Player</span>
                       </>
                     )}
                   </button>
@@ -1089,7 +1113,8 @@ function Product() {
                     aria-label="Close trailer"
                     title="Close trailer player (Esc)"
                   >
-                    <FaTimes style={{ marginRight: "5px", fontSize: "12px" }} /> Close
+                    <FaTimes style={{ marginRight: "5px", fontSize: "12px" }} />
+                    <span>Close</span>
                   </button>
                 </div>
               </div>
@@ -1117,7 +1142,9 @@ function Product() {
                       rel="noopener noreferrer"
                       className="btn-primary unavail-yt-action"
                     >
-                      <FaYoutube style={{ marginRight: "6px" }} /> Watch Official Trailer on YouTube ↗
+                      <FaYoutube style={{ marginRight: "6px" }} />
+                      <span>Watch Official Trailer on YouTube</span>
+                      <FaExternalLinkAlt style={{ marginLeft: "6px", fontSize: "11px" }} />
                     </a>
                   </div>
                 )}
@@ -1137,6 +1164,10 @@ function Product() {
                 <span>No Poster Available</span>
               </div>
             )}
+            <div className="poster-vouch-badge">
+              <FaCheckCircle style={{ color: "#10b981", fontSize: "11px" }} />
+              <span>VERIFIED VOUCH</span>
+            </div>
           </div>
 
           <div className="product-info">
@@ -1300,7 +1331,10 @@ function Product() {
             {/* Rotten Tomatoes */}
             <div className="external-card card-rt">
               <div className="card-top-tag">
-                <span className="badge-brand rt-badge">🍅 Rotten Tomatoes</span>
+                <span className="badge-brand rt-badge">
+                  <SiRottentomatoes style={{ color: "#fa320a", marginRight: "6px", fontSize: "14px", verticalAlign: "middle" }} />
+                  Rotten Tomatoes
+                </span>
                 <span className="tag-source">Critics</span>
               </div>
               <div className="card-score-row">
@@ -1340,7 +1374,7 @@ function Product() {
         {/* WHERE TO WATCH STREAMING STRIP */}
         <section className="streaming-providers-strip">
           <div className="strip-label-col">
-            <span className="streaming-pulse-dot"></span>
+            <FaTv style={{ color: "#3b82f6", fontSize: "14px" }} />
             <strong>Where to Watch</strong>
             <small>Stream in 4K HDR</small>
           </div>
@@ -1350,8 +1384,9 @@ function Product() {
               target="_blank"
               rel="noopener noreferrer"
               className="provider-badge netflix"
-              title={`Watch "${title}" on Netflix ↗`}
+              title={`Watch "${title}" on Netflix`}
             >
+              <SiNetflix style={{ color: "#e50914", fontSize: "16px" }} />
               <span className="provider-name">Netflix</span>
               <span className="provider-tier">Included with Sub</span>
             </a>
@@ -1360,8 +1395,9 @@ function Product() {
               target="_blank"
               rel="noopener noreferrer"
               className="provider-badge appletv"
-              title={`Watch "${title}" on Apple TV+ ↗`}
+              title={`Watch "${title}" on Apple TV+`}
             >
+              <SiAppletv style={{ fontSize: "16px" }} />
               <span className="provider-name">Apple TV+</span>
               <span className="provider-tier">4K Dolby Vision</span>
             </a>
@@ -1370,8 +1406,9 @@ function Product() {
               target="_blank"
               rel="noopener noreferrer"
               className="provider-badge prime"
-              title={`Watch "${title}" on Prime Video ↗`}
+              title={`Watch "${title}" on Prime Video`}
             >
+              <FaAmazon style={{ color: "#00a8e1", fontSize: "15px" }} />
               <span className="provider-name">Prime Video</span>
               <span className="provider-tier">Rent or Buy</span>
             </a>
@@ -1380,8 +1417,9 @@ function Product() {
               target="_blank"
               rel="noopener noreferrer"
               className="provider-badge max"
-              title={`Watch "${title}" on Max ↗`}
+              title={`Watch "${title}" on Max`}
             >
+              <SiMax style={{ fontSize: "15px" }} />
               <span className="provider-name">Max</span>
               <span className="provider-tier">Stream in 4K</span>
             </a>
@@ -1390,10 +1428,13 @@ function Product() {
               target="_blank"
               rel="noopener noreferrer"
               className="provider-badge justwatch"
-              title={`View all stream & rental options for "${title}" on JustWatch ↗`}
+              title={`View all stream & rental options for "${title}" on JustWatch`}
             >
+              <FaPlay style={{ fontSize: "9px", color: "#fbbf24" }} />
               <span className="provider-name">All Providers</span>
-              <span className="provider-tier">JustWatch ↗</span>
+              <span className="provider-tier" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                JustWatch <FaExternalLinkAlt style={{ fontSize: "9px" }} />
+              </span>
             </a>
           </div>
         </section>
@@ -1478,8 +1519,10 @@ function Product() {
               type="button"
               className="write-review-btn"
               onClick={() => setShowReviewModal(true)}
+              style={{ display: "inline-flex", alignItems: "center" }}
             >
-              Write a Review →
+              <span>Write a Review</span>
+              <FaArrowRight style={{ marginLeft: "6px", fontSize: "11px" }} />
             </button>
           </div>
 
@@ -1686,8 +1729,13 @@ function Product() {
                   >
                     Cancel
                   </button>
-                  <button type="submit" className="btn-primary">
-                    Post My Vouch →
+                  <button
+                    type="submit"
+                    className="btn-primary"
+                    style={{ display: "inline-flex", alignItems: "center" }}
+                  >
+                    <span>Post My Vouch</span>
+                    <FaArrowRight style={{ marginLeft: "6px", fontSize: "11px" }} />
                   </button>
                 </div>
               </form>

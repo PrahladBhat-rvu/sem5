@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { FaTimes, FaArrowRight } from "react-icons/fa";
 
 const DEFAULT_POPULAR = [
   "Dune",
@@ -93,7 +94,7 @@ function SearchBar({
             onClick={handleClear}
             aria-label="Clear input"
           >
-            ✕
+            <FaTimes style={{ fontSize: "12px" }} />
           </button>
         )}
 
@@ -102,19 +103,7 @@ function SearchBar({
           className="hero-search-arrow-btn"
           aria-label="Submit search"
         >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#111"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <polyline points="12 5 19 12 12 19" />
-          </svg>
+          <FaArrowRight style={{ fontSize: "15px" }} />
         </button>
       </form>
 

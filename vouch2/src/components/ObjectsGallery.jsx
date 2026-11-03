@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { FaStar, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { getTitleUrl } from "../utils/slug";
 import { getTMDBImageUrl } from "../api/tmdb";
 
@@ -265,7 +266,10 @@ function ObjectsGallery() {
                 <div className="object-poster-wrap">
                   <img src={item.poster} alt={item.title} />
                   <div className="object-catalog-tag">{item.catalogNo}</div>
-                  <div className="object-score-pill">★ {item.vouchScore}</div>
+                  <div className="object-score-pill" style={{ display: "inline-flex", alignItems: "center" }}>
+                    <FaStar style={{ color: "#f59e0b", marginRight: "3px", fontSize: "11px" }} />
+                    {item.vouchScore}
+                  </div>
                 </div>
 
                 <div className="object-card-label">
@@ -285,7 +289,7 @@ function ObjectsGallery() {
             onClick={handlePrev}
             aria-label="Previous Object"
           >
-            ←
+            <FaArrowLeft style={{ fontSize: "13px" }} />
           </button>
 
           <div className="objects-pagination-dots">
@@ -306,7 +310,7 @@ function ObjectsGallery() {
             onClick={handleNext}
             aria-label="Next Object"
           >
-            →
+            <FaArrowRight style={{ fontSize: "13px" }} />
           </button>
         </div>
 
@@ -350,7 +354,10 @@ function ObjectsGallery() {
                 <div className="spec-consensus-hud">
                   <div className="hud-metric primary-vouch">
                     <span className="hud-label">VOUCH INDEX</span>
-                    <span className="hud-number">★ {selected.vouchScore}</span>
+                    <span className="hud-number" style={{ display: "inline-flex", alignItems: "center" }}>
+                      <FaStar style={{ color: "#f59e0b", marginRight: "5px", fontSize: "16px" }} />
+                      {selected.vouchScore}
+                    </span>
                     <span className="hud-sub">Universal Consensus</span>
                   </div>
 
@@ -372,8 +379,10 @@ function ObjectsGallery() {
                   <Link
                     to={getTitleUrl(selected)}
                     className="spec-inspect-btn"
+                    style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}
                   >
-                    Inspect Full Reviews & Vouches →
+                    <span>Inspect Full Reviews & Vouches</span>
+                    <FaArrowRight style={{ marginLeft: "8px", fontSize: "12px" }} />
                   </Link>
                 </div>
               </div>

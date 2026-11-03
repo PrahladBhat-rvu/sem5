@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { FaArrowRight } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import MovieShelf from "../components/MovieShelf";
@@ -190,8 +191,10 @@ function Home() {
             type="button"
             className="home-cta-button"
             onClick={openSignup}
+            style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}
           >
-            Join Vouch →
+            <span>Join Vouch</span>
+            <FaArrowRight style={{ marginLeft: "8px", fontSize: "13px" }} />
           </button>
         </section>
       </main>

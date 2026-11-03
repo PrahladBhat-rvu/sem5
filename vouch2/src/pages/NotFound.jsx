@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 
@@ -23,8 +24,9 @@ function NotFound() {
           </div>
 
           <div className="not-found-actions">
-            <Link to="/" className="btn-primary">
-              ← Return to Homepage
+            <Link to="/" className="btn-primary" style={{ display: "inline-flex", alignItems: "center" }}>
+              <FaArrowLeft style={{ marginRight: "8px", fontSize: "12px" }} />
+              <span>Return to Homepage</span>
             </Link>
             <Link to="/discover" className="btn-secondary">
               Browse Discover

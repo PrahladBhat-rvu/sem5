@@ -34,9 +34,28 @@ function hasTMDB() {
   return Boolean(TMDB_TOKEN);
 }
 
-// ------------------------------------------------------------
-// TMDB request
-// ------------------------------------------------------------
+const KNOWN_TV_IDS = new Set([
+  2316,   // The Office
+  238234, // High Potential
+  88785,  // Why Women Kill
+  63688,  // Crazy Ex-Girlfriend
+  57243,  // Doctor Who
+  2919,   // The Tonight Show
+  2912,   // Jeopardy!
+  60574,  // Peaky Blinders
+  1104,   // Mad Men
+  1399,   // Game of Thrones
+  1396,   // Breaking Bad
+]);
+
+function isKnownTvShow(idOrSlug) {
+  if (!idOrSlug) return false;
+  const num = Number(idOrSlug);
+  if (!isNaN(num) && KNOWN_TV_IDS.has(num)) return true;
+  const clean = String(idOrSlug).toLowerCase();
+  if (clean === "the-office" || clean.includes("the-office")) return true;
+  return false;
+}
 
 async function tmdbRequest(path) {
   if (!TMDB_TOKEN) {
@@ -198,9 +217,9 @@ app.get("/api/search/movie", async (req, res) => {
       try {
         console.log(`OMDb search: "${query}"`);
 
+        // Search OMDb across both movies and TV series
         const response = await omdbRequest({
           s: query,
-          type: "movie",
         });
 
         const data = await response.json();
@@ -237,8 +256,9 @@ app.get("/api/search/movie", async (req, res) => {
       try {
         console.log(`TMDB fallback search: "${query}"`);
 
+        // Use multi-search to cover movies and series seamlessly
         const response = await tmdbRequest(
-          `/search/movie?query=${encodeURIComponent(
+          `/search/multi?query=${encodeURIComponent(
             query
           )}&include_adult=false&language=en-US`
         );
@@ -257,10 +277,16 @@ app.get("/api/search/movie", async (req, res) => {
         }
 
         const data = await response.json();
+        const filteredResults = {
+          ...data,
+          results: (data.results || []).filter(
+            (item) => item.media_type === "movie" || item.media_type === "tv"
+          ),
+        };
 
         return res.json({
           source: "tmdb",
-          results: normalizeTMDBSearchResults(data),
+          results: normalizeTMDBSearchResults(filteredResults),
         });
       } catch (error) {
         console.error("TMDB SEARCH ERROR:", error.message, error.cause || "");
@@ -472,7 +498,7 @@ app.get("/api/movies/category/:subcategory", async (req, res) => {
 // This route automatically determines which database to use.
 //
 
-app.get("/api/movie/:id", async (req, res) => {
+app.get(["/api/movie/:id", "/api/tv/:id", "/api/title/:id"], async (req, res) => {
   const movieId = String(req.params.id || "").trim();
 
   if (!movieId) {
@@ -484,6 +510,7 @@ app.get("/api/movie/:id", async (req, res) => {
   // Extract trailing numeric/IMDb ID from slug (e.g. "the-dark-knight-155" -> "155")
   const trailingMatch = movieId.match(/-(\d+|tt\d+)$/i);
   const effectiveId = trailingMatch ? trailingMatch[1] : movieId;
+  const wantsTv = req.path.startsWith("/api/tv") || req.query.type === "tv" || isKnownTvShow(effectiveId);
 
   // ==========================================================
   // OMDb IMDb ID
@@ -702,31 +729,34 @@ app.get("/api/movie/:id", async (req, res) => {
     if (!hasTMDB()) {
       return res.status(500).json({
         error:
-          "TMDB_TOKEN is missing from .env. Cannot load numeric TMDB movie ID.",
+          "TMDB_TOKEN is missing from .env. Cannot load numeric TMDB ID.",
       });
     }
 
     try {
-      console.log(`TMDB movie request: ${effectiveId}`);
+      console.log(`TMDB request: ${effectiveId} (wantsTv: ${wantsTv})`);
 
-      let isTv = false;
+      const primaryEndpoint = wantsTv ? "tv" : "movie";
+      const fallbackEndpoint = wantsTv ? "movie" : "tv";
+
+      let isTv = wantsTv;
       let response = await tmdbRequest(
-        `/movie/${encodeURIComponent(
+        `/${primaryEndpoint}/${encodeURIComponent(
           effectiveId
         )}?append_to_response=credits,videos,recommendations,watch/providers&language=en-US`
       );
 
-      // If numeric ID not found as movie in TMDB, check if it's a TV series!
+      // If not found in primary endpoint, try the other endpoint
       if (!response.ok && response.status === 404) {
-        console.log(`TMDB movie not found for ${effectiveId}, checking TMDB TV...`);
-        const tvResponse = await tmdbRequest(
-          `/tv/${encodeURIComponent(
+        console.log(`TMDB item not found on /${primaryEndpoint}/${effectiveId}, trying /${fallbackEndpoint}...`);
+        const fallbackRes = await tmdbRequest(
+          `/${fallbackEndpoint}/${encodeURIComponent(
             effectiveId
           )}?append_to_response=credits,videos,recommendations,watch/providers&language=en-US`
         );
-        if (tvResponse.ok) {
-          response = tvResponse;
-          isTv = true;
+        if (fallbackRes.ok) {
+          response = fallbackRes;
+          isTv = !wantsTv;
         }
       }
 
@@ -853,6 +883,14 @@ app.get("/api/image/omdb", async (req, res) => {
       });
     }
 
+    // Gracefully handle TMDB paths accidentally routed to OMDb proxy
+    if (imageUrl.startsWith("/api/image/")) {
+      return res.redirect(imageUrl);
+    }
+    if (imageUrl.startsWith("/") && !imageUrl.startsWith("//")) {
+      return res.redirect(`/api/image/w500${imageUrl}`);
+    }
+
     let parsedUrl;
 
     try {
@@ -861,6 +899,12 @@ app.get("/api/image/omdb", async (req, res) => {
       return res.status(400).json({
         error: "Invalid poster URL.",
       });
+    }
+
+    // Gracefully handle full TMDB URLs
+    if (parsedUrl.hostname === "image.tmdb.org") {
+      const cleanPath = parsedUrl.pathname.replace(/^\/t\/p\/(w\d+|original)?\/?/, "/");
+      return res.redirect(`/api/image/w500${cleanPath.startsWith("/") ? cleanPath : "/" + cleanPath}`);
     }
 
     // Only allow Amazon's image host.

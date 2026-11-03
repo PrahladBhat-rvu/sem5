@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FaExclamationTriangle, FaEnvelope, FaRandom, FaCheck, FaRedo } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import { supabase } from "../lib/supabase";
 import { generateRandomUsername, generateUsernameSuggestions } from "../utils/nameGenerator";
@@ -161,14 +162,18 @@ function Signup() {
 
           {error && (
             <div className="discord-alert error" role="alert">
-              <span className="alert-icon">⚠️</span>
+              <span className="alert-icon">
+                <FaExclamationTriangle style={{ color: "#ef4444", fontSize: "14px" }} />
+              </span>
               <span>{error}</span>
             </div>
           )}
 
           {success && (
             <div className="discord-alert success" role="status">
-              <span className="alert-icon">✉️</span>
+              <span className="alert-icon">
+                <FaEnvelope style={{ color: "#10b981", fontSize: "14px" }} />
+              </span>
               <span>{success}</span>
             </div>
           )}
@@ -213,12 +218,21 @@ function Signup() {
                     className="discord-randomize-btn"
                     onClick={handleRandomizeImmediate}
                     title="Generate random cinema handle"
+                    style={{ display: "inline-flex", alignItems: "center" }}
                   >
-                    🎲 Randomize
+                    <FaRandom style={{ marginRight: "4px", fontSize: "10px" }} />
+                    Randomize
                   </button>
                   {username && (
-                    <span className={`discord-valid-tag ${isUsernameValid ? "valid" : "invalid"}`}>
-                      {isUsernameValid ? "✓ Valid" : "3-20 chars"}
+                    <span className={`discord-valid-tag ${isUsernameValid ? "valid" : "invalid"}`} style={{ display: "inline-flex", alignItems: "center" }}>
+                      {isUsernameValid ? (
+                        <>
+                          <FaCheck style={{ color: "#10b981", marginRight: "3px", fontSize: "10px" }} />
+                          Valid
+                        </>
+                      ) : (
+                        "3-20 chars"
+                      )}
                     </span>
                   )}
                 </div>
@@ -251,8 +265,9 @@ function Signup() {
                     className="discord-roll-btn"
                     onClick={handleRollSuggestions}
                     title="Shuffle new usernames"
+                    aria-label="Shuffle new usernames"
                   >
-                    ↻
+                    <FaRedo style={{ fontSize: "10px" }} />
                   </button>
                 </div>
               </div>

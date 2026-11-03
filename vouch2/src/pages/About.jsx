@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FaArrowRight } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 
 function About() {
@@ -193,8 +194,9 @@ function About() {
         <section className="about-cta">
           <h2>Ready to stop guessing and start watching?</h2>
           <div className="about-cta-buttons">
-            <Link to="/discover" className="btn-primary">
-              Discover Movies →
+            <Link to="/discover" className="btn-primary" style={{ display: "inline-flex", alignItems: "center" }}>
+              <span>Discover Movies</span>
+              <FaArrowRight style={{ marginLeft: "8px", fontSize: "12px" }} />
             </Link>
             <Link to="/signup" className="btn-secondary">
               Join the Vouch Community

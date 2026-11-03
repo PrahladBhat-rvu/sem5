@@ -1,5 +1,19 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  FaTimes,
+  FaEnvelope,
+  FaLock,
+  FaExclamationTriangle,
+  FaCheckCircle,
+  FaFilm,
+  FaAward,
+  FaBolt,
+  FaRedo,
+  FaArrowRight,
+  FaEye,
+  FaEyeSlash,
+} from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import { supabase } from "../lib/supabase";
 import { CINEMA_QUOTES, VAULT_TITLES } from "../utils/cinemaPersonality";
@@ -199,14 +213,19 @@ function Login() {
             {/* ROTATING FILM QUOTE BOX */}
             <div className="auth-quote-card interactive-quote-card">
               <div className="quote-header">
-                <span className="quote-badge">🎬 FILM WISDOM</span>
+                <span className="quote-badge" style={{ display: "inline-flex", alignItems: "center" }}>
+                  <FaFilm style={{ marginRight: "5px", fontSize: "11px" }} />
+                  FILM WISDOM
+                </span>
                 <button
                   type="button"
                   className="quote-shuffle-btn"
                   onClick={handleNextQuote}
                   title="Shuffle quote"
+                  style={{ display: "inline-flex", alignItems: "center" }}
                 >
-                  ↻ Shuffle
+                  <FaRedo style={{ marginRight: "4px", fontSize: "10px" }} />
+                  Shuffle
                 </button>
               </div>
               <p className="quote-body">"{currentQuote.quote}"</p>
@@ -215,21 +234,26 @@ function Login() {
 
             {/* QUICK DEMO CREDENTIAL CHIPS */}
             <div className="demo-credentials-deck">
-              <span className="demo-deck-title">⚡ Quick Tester Pass:</span>
+              <span className="demo-deck-title" style={{ display: "inline-flex", alignItems: "center" }}>
+                <FaBolt style={{ color: "#f59e0b", marginRight: "4px", fontSize: "11px" }} />
+                Quick Tester Pass:
+              </span>
               <div className="demo-chips-row">
                 <button
                   type="button"
                   className="demo-persona-chip highlight"
                   onClick={() => fillPersona("viewer")}
                 >
-                  🍿 Demo Viewer
+                  <FaFilm style={{ marginRight: "5px", fontSize: "11px" }} />
+                  Demo Viewer
                 </button>
                 <button
                   type="button"
                   className="demo-persona-chip"
                   onClick={() => fillPersona("critic")}
                 >
-                  🎬 Critic Demo
+                  <FaAward style={{ marginRight: "5px", fontSize: "11px" }} />
+                  Critic Demo
                 </button>
               </div>
             </div>
@@ -255,14 +279,18 @@ function Login() {
 
             {error && (
               <div className="auth-alert error animate-shake" role="alert">
-                <span className="alert-icon">⚠️</span>
+                <span className="alert-icon">
+                  <FaExclamationTriangle style={{ color: "#ef4444", fontSize: "13px" }} />
+                </span>
                 <span>{error}</span>
               </div>
             )}
 
             {infoMessage && (
               <div className="auth-alert success" role="status">
-                <span className="alert-icon">✓</span>
+                <span className="alert-icon">
+                  <FaCheckCircle style={{ color: "#10b981", fontSize: "13px" }} />
+                </span>
                 <span>{infoMessage}</span>
               </div>
             )}
@@ -272,7 +300,9 @@ function Login() {
               <div className="form-field-group">
                 <label htmlFor="login-email">Email Address</label>
                 <div className="input-with-icon">
-                  <span className="field-icon">✉</span>
+                  <span className="field-icon">
+                    <FaEnvelope style={{ fontSize: "13px" }} />
+                  </span>
                   <input
                     id="login-email"
                     type="email"
@@ -302,7 +332,9 @@ function Login() {
                 </div>
 
                 <div className="input-with-icon">
-                  <span className="field-icon">🔒</span>
+                  <span className="field-icon">
+                    <FaLock style={{ fontSize: "13px" }} />
+                  </span>
                   <input
                     id="login-password"
                     type={showPassword ? "text" : "password"}
@@ -318,7 +350,7 @@ function Login() {
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
-                    {showPassword ? "Hide" : "Show"}
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
                 </div>
               </div>
@@ -347,7 +379,10 @@ function Login() {
                     Opening the Vault...
                   </span>
                 ) : (
-                  "Enter the Screening Room →"
+                  <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                    <span>Enter the Screening Room</span>
+                    <FaArrowRight style={{ marginLeft: "8px", fontSize: "12px" }} />
+                  </span>
                 )}
               </button>
             </form>
@@ -355,8 +390,9 @@ function Login() {
             <div className="auth-card-footer">
               <p>
                 Don't have a Cinephile Pass yet?{" "}
-                <Link to="/signup" className="switch-link">
-                  Create one in 60 seconds →
+                <Link to="/signup" className="switch-link" style={{ display: "inline-flex", alignItems: "center" }}>
+                  <span>Create one in 60 seconds</span>
+                  <FaArrowRight style={{ marginLeft: "4px", fontSize: "11px" }} />
                 </Link>
               </p>
             </div>
@@ -374,7 +410,7 @@ function Login() {
                   className="modal-close-btn"
                   onClick={() => setShowForgotModal(false)}
                 >
-                  ✕
+                  <FaTimes style={{ fontSize: "14px" }} />
                 </button>
               </div>
 
@@ -407,8 +443,10 @@ function Login() {
                     type="submit"
                     className="btn-primary"
                     disabled={resetLoading}
+                    style={{ display: "inline-flex", alignItems: "center" }}
                   >
-                    {resetLoading ? "Sending Key..." : "Send Reset Link →"}
+                    <span>{resetLoading ? "Sending Key..." : "Send Reset Link"}</span>
+                    <FaArrowRight style={{ marginLeft: "6px", fontSize: "12px" }} />
                   </button>
                 </div>
               </form>

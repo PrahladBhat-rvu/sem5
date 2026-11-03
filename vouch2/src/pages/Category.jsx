@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { FaStar, FaArrowRight } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import { getTitleUrl } from "../utils/slug";
@@ -110,7 +111,10 @@ function Category() {
                 There aren't any movies available
                 for this category right now.
               </p>
-              <Link to="/categories">Browse other categories →</Link>
+              <Link to="/categories" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                <span>Browse other categories</span>
+                <FaArrowRight style={{ fontSize: "11px" }} />
+              </Link>
             </div>
           )}
 
@@ -135,7 +139,10 @@ function Category() {
                     <h3>{movie.title}</h3>
                     <div className="category-movie-meta">
                       <span>{movie.year}</span>
-                      <span>★ {movie.rating}</span>
+                      <span style={{ display: "inline-flex", alignItems: "center" }}>
+                        <FaStar style={{ color: "#f59e0b", marginRight: "3px", fontSize: "11px" }} />
+                        {movie.rating}
+                      </span>
                     </div>
                   </div>
                 </Link>

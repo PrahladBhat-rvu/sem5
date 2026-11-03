@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { FaBars, FaTimes, FaSearch } from "react-icons/fa";
+import { FaBars, FaTimes, FaSearch, FaCheck, FaBolt, FaArrowRight } from "react-icons/fa";
 import { supabase } from "../lib/supabase";
 import { useAuthModal } from "../context/AuthModalContext";
 import { useTheme } from "../context/ThemeContext";
@@ -538,8 +538,9 @@ function Navbar() {
                 type="button"
                 className="modal-close-btn"
                 onClick={() => setShowShortcutsModal(false)}
+                aria-label="Close shortcuts modal"
               >
-                ✕
+                <FaTimes style={{ fontSize: "14px" }} />
               </button>
             </div>
             <div className="shortcuts-list">
@@ -583,13 +584,17 @@ function Navbar() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="upgrade-header">
-              <div className="upgrade-sparkle-pill">✨ VOUCH PRO</div>
+              <div className="upgrade-sparkle-pill">
+                <FaBolt style={{ color: "#f59e0b", marginRight: "5px", fontSize: "12px" }} />
+                VOUCH PRO
+              </div>
               <button
                 type="button"
                 className="modal-close-btn"
                 onClick={() => setShowUpgradeModal(false)}
+                aria-label="Close upgrade modal"
               >
-                ✕
+                <FaTimes style={{ fontSize: "14px" }} />
               </button>
             </div>
             <h2>Elevate your cinema journey.</h2>
@@ -597,10 +602,22 @@ function Navbar() {
               Verified review consensus, custom 16:9 shelf curation, and advanced critic badges.
             </p>
             <ul className="upgrade-perks">
-              <li>✓ Verified Critic badge on every published vouch</li>
-              <li>✓ Unlimited custom watchlist collections</li>
-              <li>✓ High-priority consensus impact weighting</li>
-              <li>✓ Early screening discussion circles</li>
+              <li>
+                <FaCheck style={{ color: "#10b981", marginRight: "8px", fontSize: "12px" }} />
+                Verified Critic badge on every published vouch
+              </li>
+              <li>
+                <FaCheck style={{ color: "#10b981", marginRight: "8px", fontSize: "12px" }} />
+                Unlimited custom watchlist collections
+              </li>
+              <li>
+                <FaCheck style={{ color: "#10b981", marginRight: "8px", fontSize: "12px" }} />
+                High-priority consensus impact weighting
+              </li>
+              <li>
+                <FaCheck style={{ color: "#10b981", marginRight: "8px", fontSize: "12px" }} />
+                Early screening discussion circles
+              </li>
             </ul>
             <button
               type="button"
@@ -610,7 +627,8 @@ function Navbar() {
                 alert("You've been added to the Vouch Pro priority review circle!");
               }}
             >
-              Activate Pro Preview (Free) →
+              <span>Activate Pro Preview (Free)</span>
+              <FaArrowRight style={{ marginLeft: "8px", fontSize: "12px" }} />
             </button>
           </div>
         </div>

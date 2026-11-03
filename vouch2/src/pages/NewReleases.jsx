@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { FaStar, FaArrowRight } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import { getTitleUrl } from "../utils/slug";
 import { getNewReleases, getTrendingMovies, getTMDBImageUrl } from "../api/tmdb";
@@ -130,7 +131,10 @@ function NewReleases() {
                       ) : (
                         <div className="release-poster-placeholder">No Poster</div>
                       )}
-                      <span className="release-score">★ {rating}</span>
+                      <span className="release-score" style={{ display: "inline-flex", alignItems: "center" }}>
+                        <FaStar style={{ color: "#f59e0b", marginRight: "3px", fontSize: "11px" }} />
+                        {rating}
+                      </span>
                     </div>
 
                     <div className="release-details">
@@ -165,8 +169,10 @@ function NewReleases() {
                         <Link
                           to={getTitleUrl(movie)}
                           className="release-action-link"
+                          style={{ display: "inline-flex", alignItems: "center" }}
                         >
-                          Check Consensus →
+                          <span>Check Consensus</span>
+                          <FaArrowRight style={{ marginLeft: "5px", fontSize: "11px" }} />
                         </Link>
                       </div>
                     </div>
@@ -182,8 +188,9 @@ function NewReleases() {
           <h2>Want alerts when reviews drop for upcoming films?</h2>
           <p>Create an account to build your personal watchlist and get genuine consensus notifications.</p>
           <div className="releases-cta-actions">
-            <Link to="/signup" className="releases-primary-btn">
-              Create Free Account →
+            <Link to="/signup" className="releases-primary-btn" style={{ display: "inline-flex", alignItems: "center" }}>
+              <span>Create Free Account</span>
+              <FaArrowRight style={{ marginLeft: "6px", fontSize: "12px" }} />
             </Link>
             <Link to="/categories" className="releases-secondary-btn">
               Browse Categories

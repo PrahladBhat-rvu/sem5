@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FaStar, FaTimes, FaCheckCircle, FaBookmark, FaPen, FaArrowRight } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import { supabase } from "../lib/supabase";
 import { FALLBACK_TRENDING } from "../api/tmdb";
@@ -98,7 +99,10 @@ function Profile() {
           <div className="profile-user-details">
             <div className="profile-name-row">
               <h1>{displayName}</h1>
-              <span className="verified-badge">✓ Verified Member</span>
+              <span className="verified-badge" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                <FaCheckCircle style={{ color: "#10b981", fontSize: "12px" }} />
+                Verified Member
+              </span>
             </div>
             <p className="profile-handle">@{displayName.toLowerCase().replace(/\s+/g, "")}</p>
             <p className="profile-email">{userEmail}</p>
@@ -165,13 +169,16 @@ function Profile() {
           <section className="profile-content-section">
             {watchlist.length === 0 ? (
               <div className="profile-empty-state">
-                <div className="empty-icon">🔖</div>
+                <div className="empty-icon">
+                  <FaBookmark style={{ fontSize: "28px", color: "var(--color-primary, #ff5436)", opacity: 0.8 }} />
+                </div>
                 <h3>Your watchlist is empty</h3>
                 <p>
                   Found a film you want to save for later? Click "Bookmark / Watchlist" on any title.
                 </p>
-                <Link to="/discover" className="btn-primary" style={{ marginTop: "16px", display: "inline-block" }}>
-                  Explore Movies →
+                <Link to="/discover" className="btn-primary" style={{ marginTop: "16px", display: "inline-flex", alignItems: "center" }}>
+                  <span>Explore Movies</span>
+                  <FaArrowRight style={{ marginLeft: "6px", fontSize: "12px" }} />
                 </Link>
               </div>
             ) : (
@@ -181,14 +188,17 @@ function Profile() {
                     <Link to={getTitleUrl(movie)}>
                       <div className="movie-image">
                         <img src={movie.image} alt={movie.title} loading="lazy" />
-                        <span className="card-badge">★ {movie.rating}</span>
+                        <span className="card-badge" style={{ display: "inline-flex", alignItems: "center" }}>
+                          <FaStar style={{ color: "#f59e0b", marginRight: "3px", fontSize: "11px" }} />
+                          {movie.rating}
+                        </span>
                         <button
                           type="button"
                           className="watchlist-remove-btn"
                           title="Remove from watchlist"
                           onClick={(e) => handleRemoveFromWatchlist(e, movie.id)}
                         >
-                          ✕
+                          <FaTimes style={{ fontSize: "12px" }} />
                         </button>
                       </div>
                       <div className="movie-info">
@@ -196,7 +206,9 @@ function Profile() {
                         <h3>{movie.title}</h3>
                         <div className="movie-meta">
                           <span>{movie.year}</span>
-                          <span>Consensus: ★ {movie.rating}</span>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: "3px" }}>
+                            Consensus: <FaStar style={{ color: "#f59e0b", fontSize: "10px" }} /> {movie.rating}
+                          </span>
                         </div>
                       </div>
                     </Link>
@@ -212,13 +224,16 @@ function Profile() {
           <section className="profile-content-section">
             {userReviews.length === 0 ? (
               <div className="profile-empty-state">
-                <div className="empty-icon">✍️</div>
+                <div className="empty-icon">
+                  <FaPen style={{ fontSize: "28px", color: "var(--color-primary, #ff5436)", opacity: 0.8 }} />
+                </div>
                 <h3>You haven't posted any reviews yet</h3>
                 <p>
                   Watched something recently? Share your consensus verdict with the community.
                 </p>
-                <Link to="/search" className="btn-primary" style={{ marginTop: "16px", display: "inline-block" }}>
-                  Find a Movie to Review →
+                <Link to="/search" className="btn-primary" style={{ marginTop: "16px", display: "inline-flex", alignItems: "center" }}>
+                  <span>Find a Movie to Review</span>
+                  <FaArrowRight style={{ marginLeft: "6px", fontSize: "12px" }} />
                 </Link>
               </div>
             ) : (
@@ -227,13 +242,21 @@ function Profile() {
                   <article key={rev.id} className="user-review-card">
                     <div className="user-review-header">
                       <div>
-                        <Link to={getTitleUrl({ id: rev.movieId, title: rev.movieTitle })} className="review-movie-link">
-                          {rev.movieTitle} →
+                        <Link to={getTitleUrl({ id: rev.movieId, title: rev.movieTitle })} className="review-movie-link" style={{ display: "inline-flex", alignItems: "center" }}>
+                          <span>{rev.movieTitle}</span>
+                          <FaArrowRight style={{ marginLeft: "5px", fontSize: "11px" }} />
                         </Link>
-                        <div className="user-review-stars">
-                          {"★".repeat(rev.rating)}
-                          {"☆".repeat(5 - rev.rating)}
-                          <span className="user-review-date">{rev.date}</span>
+                        <div className="user-review-stars" style={{ display: "inline-flex", alignItems: "center", gap: "2px" }}>
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <FaStar
+                              key={i}
+                              style={{
+                                color: i < rev.rating ? "#f59e0b" : "#4b5563",
+                                fontSize: "13px",
+                              }}
+                            />
+                          ))}
+                          <span className="user-review-date" style={{ marginLeft: "6px" }}>{rev.date}</span>
                         </div>
                       </div>
 

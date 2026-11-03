@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FaArrowRight } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 
@@ -88,7 +89,9 @@ function Categories() {
                   {category.items.map(([name, path]) => (
                     <Link key={name} to={path} className="subcategory">
                       <span>{name}</span>
-                      <span className="subcategory-arrow">↗</span>
+                      <span className="subcategory-arrow">
+                        <FaArrowRight style={{ fontSize: "11px" }} />
+                      </span>
                     </Link>
                   ))}
                 </div>

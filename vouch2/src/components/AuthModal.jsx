@@ -1,4 +1,22 @@
 import { useState, useMemo } from "react";
+import {
+  FaTimes,
+  FaEnvelope,
+  FaLock,
+  FaUser,
+  FaExclamationTriangle,
+  FaCheckCircle,
+  FaCheck,
+  FaFilm,
+  FaAward,
+  FaRandom,
+  FaLightbulb,
+  FaRedo,
+  FaArrowRight,
+  FaArrowLeft,
+  FaEye,
+  FaEyeSlash,
+} from "react-icons/fa";
 import { supabase } from "../lib/supabase";
 import { useAuthModal } from "../context/AuthModalContext";
 import { generateRandomUsername, generateUsernameSuggestions } from "../utils/nameGenerator";
@@ -263,8 +281,10 @@ function AuthModal() {
                 setIsForgotView(false);
                 resetMessages();
               }}
+              style={{ display: "inline-flex", alignItems: "center" }}
             >
-              ← Back to Sign In
+              <FaArrowLeft style={{ marginRight: "6px", fontSize: "11px" }} />
+              <span>Back to Sign In</span>
             </button>
           )}
 
@@ -274,21 +294,25 @@ function AuthModal() {
             onClick={closeAuthModal}
             aria-label="Close dialog"
           >
-            ✕
+            <FaTimes style={{ fontSize: "14px" }} />
           </button>
         </div>
 
         {/* ALERTS */}
         {error && (
           <div className="auth-alert error animate-shake" role="alert">
-            <span className="alert-icon">⚠️</span>
+            <span className="alert-icon">
+              <FaExclamationTriangle style={{ color: "#ef4444", fontSize: "14px" }} />
+            </span>
             <span>{error}</span>
           </div>
         )}
 
         {success && (
           <div className="auth-alert success" role="status">
-            <span className="alert-icon">✓</span>
+            <span className="alert-icon">
+              <FaCheckCircle style={{ color: "#10b981", fontSize: "14px" }} />
+            </span>
             <span>{success}</span>
           </div>
         )}
@@ -307,7 +331,9 @@ function AuthModal() {
               <div className="auth-input-group">
                 <label htmlFor="modal-forgot-email">Email Address</label>
                 <div className="auth-input-shell">
-                  <span className="auth-input-icon">✉</span>
+                  <span className="auth-input-icon">
+                    <FaEnvelope style={{ fontSize: "13px" }} />
+                  </span>
                   <input
                     id="modal-forgot-email"
                     type="email"
@@ -323,8 +349,10 @@ function AuthModal() {
                 type="submit"
                 className="auth-action-btn"
                 disabled={loading || forgotSent}
+                style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}
               >
-                {loading ? "Sending link..." : "Send Reset Link →"}
+                <span>{loading ? "Sending link..." : "Send Reset Link"}</span>
+                <FaArrowRight style={{ marginLeft: "6px", fontSize: "12px" }} />
               </button>
             </form>
           </div>
@@ -343,7 +371,9 @@ function AuthModal() {
               <div className="auth-input-group">
                 <label htmlFor="modal-login-email">Email Address</label>
                 <div className="auth-input-shell">
-                  <span className="auth-input-icon">✉</span>
+                  <span className="auth-input-icon">
+                    <FaEnvelope style={{ fontSize: "13px" }} />
+                  </span>
                   <input
                     id="modal-login-email"
                     type="email"
@@ -373,7 +403,9 @@ function AuthModal() {
                   </button>
                 </div>
                 <div className="auth-input-shell">
-                  <span className="auth-input-icon">🔒</span>
+                  <span className="auth-input-icon">
+                    <FaLock style={{ fontSize: "13px" }} />
+                  </span>
                   <input
                     id="modal-login-password"
                     type={showPassword ? "text" : "password"}
@@ -389,7 +421,7 @@ function AuthModal() {
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
-                    {showPassword ? "Hide" : "Show"}
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
                 </div>
               </div>
@@ -413,7 +445,8 @@ function AuthModal() {
                     onClick={() => fillDemo("viewer")}
                     title="Load Demo Viewer credentials (password: RVU@123)"
                   >
-                    🍿 Demo Viewer
+                    <FaFilm style={{ marginRight: "5px", fontSize: "11px" }} />
+                    Demo Viewer
                   </button>
                   <button
                     type="button"
@@ -421,7 +454,8 @@ function AuthModal() {
                     onClick={() => fillDemo("critic")}
                     title="Load Critic credentials"
                   >
-                    🎬 Critic
+                    <FaAward style={{ marginRight: "5px", fontSize: "11px" }} />
+                    Critic
                   </button>
                 </div>
               </div>
@@ -431,8 +465,10 @@ function AuthModal() {
                 type="submit"
                 className="auth-action-btn"
                 disabled={loading}
+                style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}
               >
-                {loading ? "Signing in..." : "Sign In to Vouch →"}
+                <span>{loading ? "Signing in..." : "Sign In to Vouch"}</span>
+                <FaArrowRight style={{ marginLeft: "6px", fontSize: "12px" }} />
               </button>
             </form>
 
@@ -443,8 +479,10 @@ function AuthModal() {
                   type="button"
                   className="auth-inline-switch-btn"
                   onClick={() => handleSwitchMode("signup")}
+                  style={{ display: "inline-flex", alignItems: "center" }}
                 >
-                  Create one for free →
+                  <span>Create one for free</span>
+                  <FaArrowRight style={{ marginLeft: "4px", fontSize: "11px" }} />
                 </button>
               </p>
             </div>
@@ -464,7 +502,9 @@ function AuthModal() {
               <div className="auth-input-group">
                 <label htmlFor="modal-signup-email">Email Address</label>
                 <div className="auth-input-shell">
-                  <span className="auth-input-icon">✉</span>
+                  <span className="auth-input-icon">
+                    <FaEnvelope style={{ fontSize: "13px" }} />
+                  </span>
                   <input
                     id="modal-signup-email"
                     type="email"
@@ -488,8 +528,10 @@ function AuthModal() {
                       className="auth-random-inline-btn"
                       onClick={handleRandomizeImmediate}
                       title="Roll a random cinema handle"
+                      style={{ display: "inline-flex", alignItems: "center" }}
                     >
-                      🎲 Randomize
+                      <FaRandom style={{ marginRight: "4px", fontSize: "10px" }} />
+                      Randomize
                     </button>
                   </div>
                   <div className="auth-input-shell">
@@ -505,7 +547,7 @@ function AuthModal() {
                     />
                     {username && (
                       <span className={`auth-input-status ${isUsernameValid ? "ok" : ""}`}>
-                        {isUsernameValid ? "✓" : ""}
+                        {isUsernameValid ? <FaCheck style={{ color: "#10b981", fontSize: "11px" }} /> : null}
                       </span>
                     )}
                   </div>
@@ -517,7 +559,9 @@ function AuthModal() {
                     Display Name <small className="auth-optional">(optional)</small>
                   </label>
                   <div className="auth-input-shell">
-                    <span className="auth-input-icon">👤</span>
+                    <span className="auth-input-icon">
+                      <FaUser style={{ fontSize: "13px" }} />
+                    </span>
                     <input
                       id="modal-signup-display-name"
                       type="text"
@@ -531,7 +575,10 @@ function AuthModal() {
 
               {/* REDDIT-STYLE HANDLE SUGGESTIONS: CLEAN HORIZONTAL BAR */}
               <div className="auth-handle-suggestions">
-                <span className="suggestions-prompt">💡 Try:</span>
+                <span className="suggestions-prompt" style={{ display: "inline-flex", alignItems: "center" }}>
+                  <FaLightbulb style={{ color: "#f59e0b", marginRight: "4px", fontSize: "11px" }} />
+                  Try:
+                </span>
                 <div className="suggestions-chips-wrap">
                   {suggestions.map((sug) => (
                     <button
@@ -550,7 +597,7 @@ function AuthModal() {
                     title="Roll new handles"
                     aria-label="Refresh handle suggestions"
                   >
-                    ↻
+                    <FaRedo style={{ fontSize: "10px" }} />
                   </button>
                 </div>
               </div>
@@ -566,7 +613,9 @@ function AuthModal() {
                   )}
                 </div>
                 <div className="auth-input-shell">
-                  <span className="auth-input-icon">🔒</span>
+                  <span className="auth-input-icon">
+                    <FaLock style={{ fontSize: "13px" }} />
+                  </span>
                   <input
                     id="modal-signup-password"
                     type={showPassword ? "text" : "password"}
@@ -582,7 +631,7 @@ function AuthModal() {
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
-                    {showPassword ? "Hide" : "Show"}
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
                 </div>
               </div>
@@ -614,8 +663,10 @@ function AuthModal() {
                 type="submit"
                 className="auth-action-btn"
                 disabled={loading}
+                style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}
               >
-                {loading ? "Creating your account..." : "Join Vouch →"}
+                <span>{loading ? "Creating your account..." : "Join Vouch"}</span>
+                <FaArrowRight style={{ marginLeft: "6px", fontSize: "12px" }} />
               </button>
             </form>
 
@@ -626,8 +677,10 @@ function AuthModal() {
                   type="button"
                   className="auth-inline-switch-btn"
                   onClick={() => handleSwitchMode("login")}
+                  style={{ display: "inline-flex", alignItems: "center" }}
                 >
-                  Sign in here →
+                  <span>Sign in here</span>
+                  <FaArrowRight style={{ marginLeft: "4px", fontSize: "11px" }} />
                 </button>
               </p>
             </div>

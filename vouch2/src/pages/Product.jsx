@@ -36,6 +36,7 @@ import {
 } from "../api/tmdb";
 import { getShelvesForMovie, CURATED_SHELVES } from "../data/shelfData";
 import { slugify, getTitleUrl } from "../utils/slug";
+import "./Product.css";
 
 const VERIFIED_TRAILERS = {
   "550": "SUXWAEX2jlg",
@@ -1089,16 +1090,16 @@ function Product() {
                     type="button"
                     className="inpage-pip-toggle-btn"
                     onClick={() => setIsTrailerFloating((prev) => !prev)}
-                    title={isTrailerFloating ? "Dock back to hero" : "Float mini-player while browsing"}
+                    title={isTrailerFloating ? "Dock back to page" : "Float mini-player while browsing"}
                   >
                     {isTrailerFloating ? (
                       <>
-                        <FaCompressAlt style={{ marginRight: "6px", fontSize: "11px" }} />
-                        <span>Expand to Page</span>
+                        <FaCompressAlt style={{ fontSize: "11px" }} />
+                        <span>Expand</span>
                       </>
                     ) : (
                       <>
-                        <FaExpandAlt style={{ marginRight: "6px", fontSize: "11px" }} />
+                        <FaExpandAlt style={{ fontSize: "11px" }} />
                         <span>Float Mini-Player</span>
                       </>
                     )}
@@ -1113,7 +1114,7 @@ function Product() {
                     aria-label="Close trailer"
                     title="Close trailer player (Esc)"
                   >
-                    <FaTimes style={{ marginRight: "5px", fontSize: "12px" }} />
+                    <FaTimes style={{ fontSize: "12px" }} />
                     <span>Close</span>
                   </button>
                 </div>

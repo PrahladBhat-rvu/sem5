@@ -1,0 +1,104 @@
+/* =========================================================
+   VOUCH - PRODUCT PAGE & FLOATING CINEMA THEATER (PIP)
+   Refined PiP mini-player, controls, and streaming styling
+   ========================================================= */
+
+/* Ensure trailer action buttons never wrap or distort */
+.inpage-theater-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-shrink: 0 !important;
+}
+
+.inpage-theater-yt-btn,
+.inpage-pip-toggle-btn,
+.inpage-theater-close {
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  flex-shrink: 0 !important;
+  line-height: 1 !important;
+}
+
+/* =========================================================
+   FLOATING PICTURE-IN-PICTURE (PIP) MODE OVERHAUL
+   ========================================================= */
+.inpage-theater-shell.is-floating-pip {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 28px !important;
+  width: 440px !important;
+  max-width: calc(100vw - 32px) !important;
+  z-index: 9999 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 30px rgba(255, 84, 54, 0.45) !important;
+  overflow: hidden !important;
+  animation: pipDockIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* PiP Top Bar Header */
+.inpage-theater-shell.is-floating-pip .inpage-theater-bar {
+  padding: 7px 12px !important;
+  gap: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+/* PiP Film Title Info */
+.inpage-theater-shell.is-floating-pip .inpage-theater-title-info {
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  overflow: hidden !important;
+  margin-right: 4px !important;
+}
+
+.inpage-theater-shell.is-floating-pip .inpage-film-name {
+  display: block !important;
+  max-width: 100% !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.2 !important;
+}
+
+/* PiP Action Buttons */
+.inpage-theater-shell.is-floating-pip .inpage-theater-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  flex-shrink: 0 !important;
+}
+
+.inpage-theater-shell.is-floating-pip .inpage-theater-yt-btn,
+.inpage-theater-shell.is-floating-pip .inpage-pip-toggle-btn,
+.inpage-theater-shell.is-floating-pip .inpage-theater-close {
+  padding: 5px 9px !important;
+  font-size: 11px !important;
+  gap: 4px !important;
+  border-radius: 999px !important;
+  letter-spacing: 0.2px !important;
+}
+
+.inpage-theater-shell.is-floating-pip .inpage-theater-yt-btn svg,
+.inpage-theater-shell.is-floating-pip .inpage-pip-toggle-btn svg,
+.inpage-theater-shell.is-floating-pip .inpage-theater-close svg {
+  flex-shrink: 0 !important;
+}
+
+@keyframes pipDockIn {
+  from {
+    opacity: 0;
+    transform: translate(15px, 15px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+

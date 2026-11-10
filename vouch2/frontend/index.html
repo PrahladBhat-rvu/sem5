@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" data-theme="dark" style="background-color: #0d0d10; color-scheme: dark;">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vouch</title>
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('vouch-theme');
+          var theme = (saved === 'light' || saved === 'dark') ? saved : 'dark';
+          document.documentElement.setAttribute('data-theme', theme);
+          document.documentElement.style.colorScheme = theme;
+          if (theme === 'light') {
+            document.documentElement.style.backgroundColor = '#f5f4ef';
+          } else {
+            document.documentElement.style.backgroundColor = '#0d0d10';
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+
+  <body style="background-color: #0d0d10; margin: 0;">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

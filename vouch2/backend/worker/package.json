@@ -1,0 +1,6 @@
+{
+  "name": "vouch-worker",
+  "private": true,
+  "type": "module"
+}
+

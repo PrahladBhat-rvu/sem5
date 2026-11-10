@@ -1,0 +1,820 @@
+/* ==========================================================================
+   VOUCH - DIALOG13 AUTH MODAL STYLESHEET
+   Styled with Vouch's signature brand colors:
+   Primary Accent: #ff5436 (Vibrant Coral / Crimson)
+   Dark Theme: #0d0d10 base, #16161c surface, #26262e borders
+   Light Theme: #ffffff surface, #e5e3dc borders
+   ========================================================================== */
+
+/* 1. Backdrop Overlay */
+.dialog13-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: dialog13FadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes dialog13FadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 2. Dialog Content Card */
+.dialog13-content {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  border-radius: 1.25rem; /* rounded-2xl */
+  padding: 1.625rem; /* p-6+ */
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.35), 0 0 40px rgba(255, 84, 54, 0.04);
+  animation: dialog13PopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: #3f3f46 transparent;
+
+  /* Light mode */
+  background-color: #ffffff;
+  border: 1px solid #e5e3dc;
+  color: #111115;
+}
+
+/* Dark mode (Vouch default) */
+[data-theme="dark"] .dialog13-content,
+.dark .dialog13-content {
+  background-color: #141418;
+  border: 1px solid #27272f;
+  color: #f4f4f7;
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.75), 0 0 50px rgba(255, 84, 54, 0.06), 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+@keyframes dialog13PopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Custom Scrollbar */
+.dialog13-content::-webkit-scrollbar {
+  width: 5px;
+}
+.dialog13-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+.dialog13-content::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+  border-radius: 9999px;
+}
+
+/* 3. Top Bar (Switcher & Close Button) */
+.dialog13-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.dialog13-segmented-control {
+  display: inline-flex;
+  align-items: center;
+  background-color: #f2f0ea;
+  border: 1px solid #e0ded6;
+  border-radius: 0.75rem; /* rounded-xl */
+  padding: 3px;
+  gap: 2px;
+}
+
+[data-theme="dark"] .dialog13-segmented-control,
+.dark .dialog13-segmented-control {
+  background-color: #1c1c22;
+  border-color: #2b2b34;
+}
+
+.dialog13-segment-btn {
+  background: transparent;
+  border: none;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #71717a;
+  border-radius: 0.6rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+[data-theme="dark"] .dialog13-segment-btn,
+.dark .dialog13-segment-btn {
+  color: #9999a4;
+}
+
+.dialog13-segment-btn.active {
+  background-color: #ffffff;
+  color: #ff5436; /* Vouch Brand Accent */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .dialog13-segment-btn.active,
+.dark .dialog13-segment-btn.active {
+  background-color: #0d0d10;
+  color: #ff5436; /* Vouch Brand Accent */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.dialog13-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #e5e3dc;
+  background-color: #f9f8f5;
+  color: #71717a;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+[data-theme="dark"] .dialog13-close-btn,
+.dark .dialog13-close-btn {
+  background-color: #1e1e24;
+  border-color: #2e2e38;
+  color: #a1a1aa;
+}
+
+.dialog13-close-btn:hover {
+  background-color: #f2f0ea;
+  color: #18181b;
+  transform: scale(1.05);
+}
+
+[data-theme="dark"] .dialog13-close-btn:hover,
+.dark .dialog13-close-btn:hover {
+  background-color: #2c2c36;
+  color: #ffffff;
+}
+
+/* 4. Header (Title & Description) */
+.dialog13-header {
+  text-align: left;
+  margin-bottom: 1.25rem;
+}
+
+.dialog13-title {
+  font-size: 1.5rem; /* text-2xl */
+  line-height: 2rem;
+  font-weight: 800; /* font-extrabold */
+  color: #111115;
+  margin: 0;
+  letter-spacing: -0.03em;
+}
+
+[data-theme="dark"] .dialog13-title,
+.dark .dialog13-title {
+  color: #ffffff;
+}
+
+.dialog13-description {
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.25rem;
+  color: #666672;
+  margin: 0.35rem 0 0 0;
+}
+
+[data-theme="dark"] .dialog13-description,
+.dark .dialog13-description {
+  color: #9999a4;
+}
+
+/* 5. Alerts / Messages */
+.dialog13-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.25;
+  margin-bottom: 1rem;
+}
+
+.dialog13-alert.error {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.dialog13-alert.success {
+  background-color: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #10b981;
+}
+
+/* 6. Form Grid & Inputs */
+.dialog13-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.dialog13-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.dialog13-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  text-align: left;
+}
+
+.dialog13-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dialog13-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #33333d;
+  user-select: none;
+}
+
+[data-theme="dark"] .dialog13-label,
+.dark .dialog13-label {
+  color: #d4d4dc;
+}
+
+.dialog13-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.dialog13-input {
+  width: 100%;
+  border-radius: 0.75rem; /* rounded-xl */
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem; /* text-sm */
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.15s ease;
+  font-family: inherit;
+
+  background-color: #faf9f6;
+  border: 1px solid #dedcd3;
+  color: #111115;
+}
+
+[data-theme="dark"] .dialog13-input,
+.dark .dialog13-input {
+  background-color: #0d0d10;
+  border-color: #272730;
+  color: #ffffff;
+}
+
+.dialog13-input::placeholder {
+  color: #a1a1aa;
+}
+
+[data-theme="dark"] .dialog13-input::placeholder,
+.dark .dialog13-input::placeholder {
+  color: #636370;
+}
+
+/* Vouch Coral / Crimson Focus Ring */
+.dialog13-input:focus {
+  border-color: #ff5436;
+  box-shadow: 0 0 0 3px rgba(255, 84, 54, 0.2);
+}
+
+[data-theme="dark"] .dialog13-input:focus,
+.dark .dialog13-input:focus {
+  border-color: #ff5436;
+  box-shadow: 0 0 0 3px rgba(255, 84, 54, 0.25);
+}
+
+.dialog13-input.with-prefix {
+  padding-left: 1.85rem;
+}
+
+.dialog13-input.with-suffix {
+  padding-right: 2.5rem;
+}
+
+.dialog13-input-prefix {
+  position: absolute;
+  left: 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #ff5436; /* Vouch Brand Accent */
+  pointer-events: none;
+}
+
+.dialog13-input-suffix-btn {
+  position: absolute;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  color: #71717a;
+  cursor: pointer;
+  padding: 0.25rem 0.4rem;
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s;
+}
+
+[data-theme="dark"] .dialog13-input-suffix-btn,
+.dark .dialog13-input-suffix-btn {
+  color: #9999a4;
+}
+
+.dialog13-input-suffix-btn:hover {
+  color: #111115;
+}
+
+[data-theme="dark"] .dialog13-input-suffix-btn:hover,
+.dark .dialog13-input-suffix-btn:hover {
+  color: #ffffff;
+}
+
+/* 7. Cinema Username Randomize Button */
+.dialog13-random-btn {
+  background: transparent;
+  border: none;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ff5436; /* Vouch Brand Accent */
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0;
+  transition: opacity 0.15s;
+}
+
+[data-theme="dark"] .dialog13-random-btn,
+.dark .dialog13-random-btn {
+  color: #ff5436;
+}
+
+.dialog13-random-btn:hover {
+  opacity: 0.82;
+  text-decoration: underline;
+}
+
+/* 8. Password Strength Meter */
+.dialog13-strength-pill {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* 9. Taste Archetype Persona Selector */
+.dialog13-archetype-wrap {
+  margin-top: 0.15rem;
+}
+
+.dialog13-archetype-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+
+.dialog13-archetype-btn {
+  background-color: #faf9f6;
+  border: 1px solid #dedcd3;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+[data-theme="dark"] .dialog13-archetype-btn,
+.dark .dialog13-archetype-btn {
+  background-color: #0d0d10;
+  border-color: #272730;
+}
+
+.dialog13-archetype-btn:hover {
+  border-color: #b5b5c0;
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .dialog13-archetype-btn:hover,
+.dark .dialog13-archetype-btn:hover {
+  border-color: #4a4a58;
+}
+
+.dialog13-archetype-btn.active {
+  border-color: #ff5436;
+  background-color: rgba(255, 84, 54, 0.08);
+  box-shadow: 0 0 0 1px #ff5436;
+}
+
+[data-theme="dark"] .dialog13-archetype-btn.active,
+.dark .dialog13-archetype-btn.active {
+  border-color: #ff5436;
+  background-color: rgba(255, 84, 54, 0.12);
+  box-shadow: 0 0 0 1px #ff5436;
+}
+
+.dialog13-archetype-icon {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.dialog13-archetype-title {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #27272a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+[data-theme="dark"] .dialog13-archetype-title,
+.dark .dialog13-archetype-title {
+  color: #e4e4ec;
+}
+
+/* 10. Checkbox & Terms */
+.dialog13-checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.dialog13-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 0.375rem;
+  border: 1px solid #d4d4dc;
+  background-color: #ffffff;
+  margin-top: 2px;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+[data-theme="dark"] .dialog13-checkbox,
+.dark .dialog13-checkbox {
+  border-color: #3b3b47;
+  background-color: #0d0d10;
+}
+
+/* Vouch Checked State */
+.dialog13-checkbox:checked {
+  background-color: #ff5436;
+  border-color: #ff5436;
+}
+
+[data-theme="dark"] .dialog13-checkbox:checked,
+.dark .dialog13-checkbox:checked {
+  background-color: #ff5436;
+  border-color: #ff5436;
+}
+
+.dialog13-checkbox:checked::before {
+  content: "";
+  width: 10px;
+  height: 6px;
+  border-left: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  transform: rotate(-45deg) translate(1px, -1px);
+}
+
+.dialog13-checkbox:focus-visible {
+  box-shadow: 0 0 0 3px rgba(255, 84, 54, 0.25);
+}
+
+[data-theme="dark"] .dialog13-checkbox:focus-visible,
+.dark .dialog13-checkbox:focus-visible {
+  box-shadow: 0 0 0 3px rgba(255, 84, 54, 0.3);
+}
+
+.dialog13-checkbox-label {
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: #555562;
+  user-select: none;
+  cursor: pointer;
+}
+
+[data-theme="dark"] .dialog13-checkbox-label,
+.dark .dialog13-checkbox-label {
+  color: #d4d4dc;
+}
+
+.dialog13-checkbox-label a {
+  font-weight: 600;
+  color: #111115;
+  text-decoration: underline;
+  transition: color 0.15s;
+}
+
+[data-theme="dark"] .dialog13-checkbox-label a,
+.dark .dialog13-checkbox-label a {
+  color: #ffffff;
+}
+
+.dialog13-checkbox-label a:hover {
+  color: #ff5436;
+}
+
+/* 11. Footer & Buttons (Website Coral / Crimson) */
+.dialog13-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border: none;
+  background: transparent;
+}
+
+.dialog13-btn-primary {
+  width: 100%;
+  border-radius: 0.75rem; /* rounded-xl */
+  padding: 0.6875rem 1rem;
+  font-size: 0.9375rem;
+  font-weight: 700; /* font-bold */
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #ff5436; /* Vouch Signature Button */
+  box-shadow: 0 4px 14px rgba(255, 84, 54, 0.32);
+  transition: all 0.15s ease;
+}
+
+.dialog13-btn-primary:hover:not(:disabled) {
+  background-color: #ff684d;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(255, 84, 54, 0.4);
+}
+
+.dialog13-btn-primary:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.dialog13-btn-primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 84, 54, 0.35);
+}
+
+[data-theme="dark"] .dialog13-btn-primary,
+.dark .dialog13-btn-primary {
+  background-color: #ff5436;
+}
+
+[data-theme="dark"] .dialog13-btn-primary:hover:not(:disabled),
+.dark .dialog13-btn-primary:hover:not(:disabled) {
+  background-color: #ff684d;
+}
+
+.dialog13-btn-primary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 12. Divider ("Or sign up with") */
+.dialog13-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.25rem 0;
+}
+
+.dialog13-divider::before,
+.dialog13-divider::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background-color: #e5e3dc;
+}
+
+[data-theme="dark"] .dialog13-divider::before,
+[data-theme="dark"] .dialog13-divider::after,
+.dark .dialog13-divider::before,
+.dark .dialog13-divider::after {
+  background-color: #272730;
+}
+
+.dialog13-divider-text {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #9999a4;
+}
+
+[data-theme="dark"] .dialog13-divider-text,
+.dark .dialog13-divider-text {
+  color: #71717e;
+}
+
+/* 13. Google OAuth Button */
+.dialog13-btn-google {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  border-radius: 0.75rem; /* rounded-xl */
+  padding: 0.65rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  background-color: #ffffff;
+  border: 1px solid #dedcd3;
+  color: #111115;
+}
+
+[data-theme="dark"] .dialog13-btn-google,
+.dark .dialog13-btn-google {
+  background-color: #141418;
+  border-color: #2c2c36;
+  color: #f4f4f7;
+}
+
+.dialog13-btn-google:hover {
+  background-color: #f5f4ef;
+  border-color: #cfccc2;
+}
+
+[data-theme="dark"] .dialog13-btn-google:hover,
+.dark .dialog13-btn-google:hover {
+  background-color: #1e1e24;
+  border-color: #3f3f4c;
+}
+
+.dialog13-btn-google:active {
+  transform: scale(0.98);
+}
+
+.dialog13-google-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* 14. Bottom Switcher / Prompts */
+.dialog13-bottom-prompt {
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.dialog13-bottom-prompt p {
+  font-size: 0.8125rem;
+  color: #71717a;
+  margin: 0;
+}
+
+[data-theme="dark"] .dialog13-bottom-prompt p,
+.dark .dialog13-bottom-prompt p {
+  color: #9999a4;
+}
+
+.dialog13-inline-btn {
+  background: transparent;
+  border: none;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #ff5436; /* Vouch Brand Accent */
+  cursor: pointer;
+  padding: 0 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: opacity 0.15s;
+}
+
+[data-theme="dark"] .dialog13-inline-btn,
+.dark .dialog13-inline-btn {
+  color: #ff5436;
+}
+
+.dialog13-inline-btn:hover {
+  text-decoration: underline;
+  opacity: 0.85;
+}
+
+/* 15. Demo Account Chips (for Sign In) */
+.dialog13-demo-chips {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.15rem;
+}
+
+.dialog13-demo-chip {
+  background-color: #f2f0ea;
+  border: 1px solid #dedcd3;
+  color: #44444e;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.55rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.15s ease;
+}
+
+[data-theme="dark"] .dialog13-demo-chip,
+.dark .dialog13-demo-chip {
+  background-color: #1c1c22;
+  border-color: #2c2c36;
+  color: #d4d4dc;
+}
+
+.dialog13-demo-chip:hover {
+  background-color: #e5e3dc;
+}
+
+[data-theme="dark"] .dialog13-demo-chip:hover,
+.dark .dialog13-demo-chip:hover {
+  background-color: #282832;
+}
+
+.dialog13-demo-chip.highlight {
+  border-color: #ff5436;
+  color: #ff5436;
+  background-color: rgba(255, 84, 54, 0.08);
+}
+
+[data-theme="dark"] .dialog13-demo-chip.highlight,
+.dark .dialog13-demo-chip.highlight {
+  border-color: #ff5436;
+  color: #ff5436;
+  background-color: rgba(255, 84, 54, 0.12);
+}
+
+/* 16. Responsive adjustments */
+@media (max-width: 480px) {
+  .dialog13-content {
+    padding: 1.25rem;
+    border-radius: 1rem;
+  }
+
+  .dialog13-title {
+    font-size: 1.25rem;
+  }
+
+  .dialog13-grid-2 {
+    grid-template-columns: 1fr;
+    gap: 0.625rem;
+  }
+
+  .dialog13-archetype-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.35rem;
+  }
+}

@@ -7,8 +7,15 @@ require("dotenv").config();
 
 const app = express();
 
+const reviewsRouter = require("./reviews");
+const authRouter = require("./auth");
+const profilesRouter = require("./profiles");
 app.use(cors());
 app.use(express.json());
+
+app.use("/api/reviews", reviewsRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/profile", profilesRouter);
 
 const PORT = process.env.PORT || 5000;
 

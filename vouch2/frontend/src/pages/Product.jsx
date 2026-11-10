@@ -37,6 +37,10 @@ import {
 import { getShelvesForMovie, CURATED_SHELVES } from "../data/shelfData";
 import { slugify, getTitleUrl } from "../utils/slug";
 import "./Product.css";
+import {
+  getMovieReviews,
+  createMovieReview,
+} from "../lib/api";
 
 const VERIFIED_TRAILERS = {
   "550": "SUXWAEX2jlg",
@@ -646,39 +650,60 @@ function Product() {
   };
 
   // Sync user watchlist, watched, favorite, and real reviews
-  useEffect(() => {
-    if (!movie) return;
-    const movieId = String(movie.id || movie.imdbID || "");
-    const movieSlug = slugify(movie.title || movie.name || rawIdentifier || "");
+  // Sync watchlist, watched, favorites and Supabase reviews
+useEffect(() => {
+  if (!movie) return;
+
+  const movieId = String(movie.id || movie.imdbID || "");
+  const movieSlug = slugify(movie.title || movie.name || rawIdentifier || "");
+
+  try {
+    const watchlist = JSON.parse(localStorage.getItem("vouch_watchlist") || "[]");
+    setIsSavedInWatchlist(
+      watchlist.some(
+        (item) =>
+          String(item.id || item.imdbID) === movieId ||
+          (movieSlug && slugify(item.title || item.name) === movieSlug)
+      )
+    );
+
+    const watched = JSON.parse(localStorage.getItem("vouch_watched") || "[]");
+    setIsWatched(watched.includes(movieId) || watched.includes(movieSlug));
+
+    const favorites = JSON.parse(localStorage.getItem("vouch_favorites") || "[]");
+    setIsFavorite(favorites.includes(movieId) || favorites.includes(movieSlug));
+  } catch (error) {
+    console.error("Could not load saved movie lists:", error);
+  }
+
+  let cancelled = false;
+
+  const loadReviews = async () => {
     try {
-      const watchlist = JSON.parse(localStorage.getItem("vouch_watchlist") || "[]");
-      setIsSavedInWatchlist(
-        watchlist.some(
-          (item) => String(item.id || item.imdbID) === movieId || (movieSlug && slugify(item.title || item.name) === movieSlug)
-        )
-      );
-
-      const watched = JSON.parse(localStorage.getItem("vouch_watched") || "[]");
-      setIsWatched(watched.includes(movieId) || (movieSlug && watched.includes(movieSlug)));
-
-      const favorites = JSON.parse(localStorage.getItem("vouch_favorites") || "[]");
-      setIsFavorite(favorites.includes(movieId) || (movieSlug && favorites.includes(movieSlug)));
-
-      // Check stored reviews across both ID and slug keys
-      const storedReviews =
-        localStorage.getItem(`vouch_reviews_${movieId}`) ||
-        (movieSlug ? localStorage.getItem(`vouch_reviews_${movieSlug}`) : null) ||
-        (rawIdentifier ? localStorage.getItem(`vouch_reviews_${rawIdentifier}`) : null);
-
-      if (storedReviews) {
-        setReviewsList(JSON.parse(storedReviews));
-      } else {
-        setReviewsList([]);
-      }
-    } catch {
-      setReviewsList([]);
+      const reviews = await getMovieReviews(movieId);
+      if (!cancelled) setReviewsList(reviews);
+    } catch (error) {
+      console.error("Failed to load movie reviews:", error);
+      if (!cancelled) setReviewsList([]);
     }
-  }, [movie, rawIdentifier]);
+  };
+
+  loadReviews();
+
+  // Refresh when the user returns to this page
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "visible") loadReviews();
+  };
+
+  window.addEventListener("focus", loadReviews);
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+
+  return () => {
+    cancelled = true;
+    window.removeEventListener("focus", loadReviews);
+    document.removeEventListener("visibilitychange", handleVisibilityChange);
+  };
+}, [movie, rawIdentifier]);
 
   // Handle ESC key to close trailer or review modal
   useEffect(() => {
@@ -918,49 +943,40 @@ function Product() {
     });
   };
 
-  const handleSubmitReview = (e) => {
-    e.preventDefault();
-    if (!modalText.trim()) return;
+  
+const handleSubmitReview = async (e) => {
+  e.preventDefault();
 
-    const movieTitle = movie?.title || movie?.name || "Film";
-    const movieSlug = slugify(movieTitle);
-    const movieId = String(movie?.id || movie?.imdbID || rawIdentifier);
+  if (!modalText.trim()) return;
 
-    const newRev = {
-      id: Date.now(),
-      user: (modalAuthor.trim() || "you").toLowerCase().replace(/\s+/g, "_"),
-      name: modalAuthor.trim() || "Anonymous Cinephile",
+  const movieTitle = movie?.title || movie?.name || "Film";
+  const movieId = String(movie?.id || movie?.imdbID || rawIdentifier);
+
+  try {
+    const newReview = await createMovieReview({
+      movieId,
+      movieTitle,
       rating: modalRating,
-      date: "Just now",
       title: modalTitle.trim() || `${modalRating}-Star Vouch`,
       text: modalText.trim(),
-      likes: 1,
-      isLiked: true,
-      verified: true,
-      movieId: movieId,
-      movieTitle: movieTitle,
-      movieSlug: movieSlug,
-      moviePoster: movie?.poster_path || movie?.poster || movie?.image || null,
-      mediaType: isTvShow(movie) ? "tvshow" : "movie",
-    };
+      name: modalAuthor.trim() || "Anonymous Cinephile",
+    });
 
-    const updated = [newRev, ...reviewsList];
-    setReviewsList(updated);
-    if (movie) {
-      try {
-        localStorage.setItem(`vouch_reviews_${movieId}`, JSON.stringify(updated));
-        if (movieSlug && movieSlug !== movieId) {
-          localStorage.setItem(`vouch_reviews_${movieSlug}`, JSON.stringify(updated));
-        }
-      } catch {}
-    }
+    setReviewsList((previous) => [newReview, ...previous]);
+
     setShowReviewModal(false);
     setModalTitle("");
     setModalText("");
     setModalAuthor("");
     setModalRating(5);
+
     showToastNotification("Your Vouch has been posted!");
-  };
+  } catch (error) {
+    console.error("Review submission failed:", error);
+    showToastNotification(error.message || "Could not post your review");
+  }
+};
+
 
   if (loading) {
     return (
@@ -1816,3 +1832,4 @@ function Product() {
 }
 
 export default Product;
+

@@ -17,6 +17,12 @@ import {
 } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import { supabase } from "../lib/supabase";
+import {
+  getMyMovieReviews,
+  deleteMovieReview,
+  getUserProfile,
+  updateUserProfile,
+} from "../lib/api";
 import { ALL_CURATED_MOVIES, FALLBACK_TRENDING, getTMDBImageUrl } from "../api/tmdb";
 import { CURATED_SHELVES } from "../data/shelfData";
 import { useAuthModal } from "../context/AuthModalContext";
@@ -133,14 +139,7 @@ export default function Profile() {
     try {
       // A. Watchlist
       const storedWatchlist = JSON.parse(localStorage.getItem("vouch_watchlist") || "[]");
-      if (Array.isArray(storedWatchlist) && storedWatchlist.length > 0) {
-        setWatchlist(storedWatchlist);
-      } else {
-        // Pre-populate with curated starters if first time
-        const starters = [FALLBACK_TRENDING[0], FALLBACK_TRENDING[1], FALLBACK_TRENDING[2]];
-        setWatchlist(starters);
-        localStorage.setItem("vouch_watchlist", JSON.stringify(starters));
-      }
+      setWatchlist(Array.isArray(storedWatchlist) ? storedWatchlist : []);
 
       // B. Watched
       const storedWatched = JSON.parse(localStorage.getItem("vouch_watched") || "[]");
@@ -150,56 +149,7 @@ export default function Profile() {
       const storedFavs = JSON.parse(localStorage.getItem("vouch_favorites") || "[]");
       setFavoriteIds(Array.isArray(storedFavs) ? storedFavs : []);
 
-      // D. User reviews (Aggregating all reviews stored under vouch_reviews_*)
-      const collected = [];
-      const seenReviewIds = new Set();
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith("vouch_reviews_")) {
-          const keyIdentifier = key.replace("vouch_reviews_", "");
-          try {
-            const list = JSON.parse(localStorage.getItem(key) || "[]");
-            if (Array.isArray(list)) {
-              for (const r of list) {
-                if (seenReviewIds.has(r.id)) continue;
-                seenReviewIds.add(r.id);
-
-                const movieInfo = resolveMovieMetadata(r.movieId || keyIdentifier, r.movieTitle);
-                let realTitle = r.movieTitle;
-
-                if (!realTitle || /^(movie|title)\s*#?\d+$/i.test(String(realTitle).trim())) {
-                  realTitle = movieInfo?.title ||
-                    (isNaN(Number(keyIdentifier))
-                      ? keyIdentifier.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
-                      : `Title #${keyIdentifier}`);
-                }
-
-                collected.push({
-                  ...r,
-                  movieId: movieInfo?.id || r.movieId || keyIdentifier,
-                  movieTitle: realTitle,
-                  movieSlug: r.movieSlug || slugify(realTitle),
-                  mediaType: r.mediaType || (movieInfo?.media_type === "tv" ? "tvshow" : "movie"),
-                });
-              }
-            }
-          } catch {}
-        }
-      }
-      // If none written yet, provide starter showcase vouch
-      if (collected.length === 0) {
-        collected.push({
-          id: "starter-vouch-1",
-          movieId: 693134,
-          movieTitle: "Dune: Part Two",
-          movieSlug: "dune-part-two",
-          rating: 5,
-          date: "Verified Vouch",
-          title: "An undisputed modern sci-fi triumph",
-          text: "Visually uncompromised, sound design that rattles your chest, and storytelling that treats the viewer with respect. 5 stars all day.",
-        });
-      }
-      setUserReviews(collected);
+      
     } catch (e) {
       console.warn("Storage sync error:", e);
     }
@@ -210,6 +160,35 @@ export default function Profile() {
     window.addEventListener("storage", refreshStorage);
     return () => window.removeEventListener("storage", refreshStorage);
   }, []);
+
+  // Load reviews belonging to the currently logged-in user
+useEffect(() => {
+  let cancelled = false;
+
+  async function loadReviews() {
+    if (!user) {
+      setUserReviews([]);
+      return;
+    }
+
+    try {
+      const reviews = await getMyMovieReviews(user.id);
+
+      if (!cancelled) {
+        setUserReviews(reviews);
+      }
+    } catch (error) {
+      console.error("Failed to load user reviews:", error);
+      if (!cancelled) showToast("Could not load your reviews");
+    }
+  }
+
+  loadReviews();
+
+  return () => {
+    cancelled = true;
+  };
+}, [user]);
 
   // Compute full movie objects for Watched & Favorites
   const watchedMovies = useMemo(() => {
@@ -294,18 +273,20 @@ export default function Profile() {
     showToast("Removed from Favorites");
   };
 
-  const handleDeleteReview = (reviewId, movieId) => {
-    const updated = userReviews.filter((r) => r.id !== reviewId);
-    setUserReviews(updated);
-    if (movieId) {
-      try {
-        const stored = JSON.parse(localStorage.getItem(`vouch_reviews_${movieId}`) || "[]");
-        const filtered = stored.filter((r) => r.id !== reviewId);
-        localStorage.setItem(`vouch_reviews_${movieId}`, JSON.stringify(filtered));
-      } catch {}
-    }
-    showToast("Review deleted");
-  };
+  const handleDeleteReview = async (reviewId) => {
+  try {
+    await deleteMovieReview(reviewId);
+
+    setUserReviews((previous) =>
+      previous.filter((review) => review.id !== reviewId)
+    );
+
+    showToast("Review deleted successfully");
+  } catch (error) {
+    console.error("Review deletion failed:", error);
+    showToast(error.message || "Could not delete review");
+  }
+};
 
   const handleShareProfile = () => {
     try {
@@ -807,7 +788,7 @@ export default function Profile() {
                           type="button"
                           className="profile-card-action-btn"
                           style={{ position: "static", width: "28px", height: "28px" }}
-                          onClick={() => handleDeleteReview(rev.id, rev.movieId)}
+                          onClick={() => handleDeleteReview(rev.id)}
                           title="Delete Review"
                           aria-label="Delete Review"
                         >
@@ -914,3 +895,4 @@ export default function Profile() {
     </div>
   );
 }
+
